@@ -15,6 +15,7 @@
 
   <modules>
     <module>duedate-calculator-java</module>
+	<module>duedate-calculator-java-util</module>
     <module>duedate-calculator-rest</module>
   </modules>
 </project>
