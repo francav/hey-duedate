@@ -96,7 +96,6 @@ public class DueDateCalculator {
 
 		calendarBlock.accept(DayLightSavingVisitor.builder(calendar.getDayLightSavingInfoByLocation()).build());
 
-		// TODO consider DST and Non business hours mixed scenarious
 		calendarBlock.accept(NonBusinessDayVisitor.builder(calendar.getNonBusinessDaysByLocation()).build());
 
 		if (calendarBlock.isOn()) {

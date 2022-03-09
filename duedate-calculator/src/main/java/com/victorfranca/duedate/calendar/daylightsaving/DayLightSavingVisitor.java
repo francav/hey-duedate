@@ -41,14 +41,12 @@ public class DayLightSavingVisitor implements CalendarBlockVisitor {
 
 	}
 
-	// TODO merge updateDateForDST methods
 	private void updateStartDateForDST(CalendarBlock calendarBlock, DayLightSavingInfo dayLightSavingInfo) {
 		if (Dates.isBetween(dayLightSavingInfo.getStart(), dayLightSavingInfo.getEnd(), calendarBlock.getStart())) {
 			calendarBlock.setStart(Dates.addMinutes(dayLightSavingInfo.getOffsetInMinutes(), calendarBlock.getStart()));
 		}
 	}
 
-	// TODO merge updateDateForDST methods
 	private void updateEndDateForDST(CalendarBlock calendarBlock, DayLightSavingInfo dayLightSavingInfo) {
 		if (Dates.isBetween(dayLightSavingInfo.getStart(), dayLightSavingInfo.getEnd(), calendarBlock.getEnd())) {
 			calendarBlock.setEnd(Dates.addMinutes(1 * dayLightSavingInfo.getOffsetInMinutes(), calendarBlock.getEnd()));

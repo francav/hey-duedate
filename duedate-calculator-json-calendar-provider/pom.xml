@@ -8,10 +8,10 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>duedate-calculator-rest-calendar-provider</artifactId>
+	<artifactId>duedate-calculator-json-calendar-provider</artifactId>
 	<packaging>jar</packaging>
 
-	<name>duedate-calculator-rest-calendar-provider</name>
+	<name>duedate-calculator-json-calendar-provider</name>
 
 	<properties>
 		<maven.compiler.target>11</maven.compiler.target>
