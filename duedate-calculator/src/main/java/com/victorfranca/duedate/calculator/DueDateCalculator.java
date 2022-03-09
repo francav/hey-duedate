@@ -1,13 +1,17 @@
 package com.victorfranca.duedate.calculator;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import com.victorfranca.duedate.Dates;
 import com.victorfranca.duedate.calendar.Calendar;
 import com.victorfranca.duedate.calendar.CalendarBlock;
-import com.victorfranca.duedate.calendar.provider.CalendarProvider;
+import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
+import com.victorfranca.duedate.calendar.daylightsaving.DayLightSavingVisitor;
+import com.victorfranca.duedate.calendar.nonbusinesshour.NonBusinessDayVisitor;
 
 /**
  * Scenario 1: startDateTime falls in first block start time
@@ -22,46 +26,32 @@ import com.victorfranca.duedate.calendar.provider.CalendarProvider;
 //TODO trim seconds?
 //TODO different time zones
 //TODO Overlaping location times scenarios
-//TODO Thread safe?
+//TODO Thread safe? Concurrency?
 public class DueDateCalculator {
 
-	private CalendarProvider calendarProvider;
+	private List<CalendarBlock> calendarBlocks;
 
-	// TODO is it ok to keep this is a global variable? Smells bad
-	private Calendar calendar;
-
-	@SuppressWarnings("unused")
-	private DueDateCalculator() {
-	}
-
-	public DueDateCalculator(CalendarProvider calendarProvider) {
-
-		if (calendarProvider == null || calendarProvider.getCalendar() == null) {
-			throw new IllegalCalendarProviderException();
-		}
-
-		this.calendarProvider = calendarProvider;
-		this.calendar = calendarProvider.getCalendar();
-	}
+	private long onDurationInMinutes;
 
 	// TODO exception when sla rolls over calendarDay onDuration
 	// Exception when SLA == ZERO
-	public LocalDateTime calculateDueDate(LocalDateTime startDateTime, long slaInMinutes) {
+	public LocalDateTime calculateDueDate(Calendar calendar, LocalDateTime startDateTime, long slaInMinutes) {
+		
+		initCalendarBlocks(calendar, startDateTime);
 
 		// TODO refactor: move to a data structure (iterator?)
 		long slaCounterInMinutes = slaInMinutes;
-		long rollingSlaMinutes = calendar.getRollingSlaMinutes(startDateTime, slaInMinutes);
+		long rollingSlaMinutes = getRollingSlaMinutes(startDateTime, slaInMinutes);
 		while (rollingSlaMinutes > 0) {
-			calendar.incCalendarBlocksDay();
+			incCalendarBlocksDay(calendar);
 			if (rollingSlaMinutes >= 0) {
 				slaCounterInMinutes = rollingSlaMinutes;
-				startDateTime = calendar.getCalendarBlocks().get(0).getStart();
+				startDateTime = this.calendarBlocks.get(0).getStart();
 			}
-			rollingSlaMinutes = calendar.getRollingSlaMinutes(startDateTime, rollingSlaMinutes);
+			rollingSlaMinutes = getRollingSlaMinutes(startDateTime, rollingSlaMinutes);
 		}
 
-		List<CalendarBlock> calendarBlocks = calendar.getCalendarBlocks();
-		Iterator<CalendarBlock> calendarBlockIterator = calendarBlocks.iterator();
+		Iterator<CalendarBlock> calendarBlockIterator = this.calendarBlocks.iterator();
 		CalendarBlock calendarBlock = null;
 		while (slaCounterInMinutes > 0) {
 			calendarBlock = calendarBlockIterator.next();
@@ -79,6 +69,82 @@ public class DueDateCalculator {
 		}
 
 		return Dates.addMinutes(Long.valueOf(slaCounterInMinutes).intValue(), calendarBlock.getEnd());
+	}
+
+	private void initCalendarBlocks(Calendar calendar, LocalDateTime startDateTime) {
+		
+		calendarBlocks = new ArrayList<>();
+
+		for (LocationRegularBusinessHours locationRegularBusinessHours : calendar
+				.getLocationRegularBusinessHoursList()) {
+
+			LocalDateTime start = startDateTime.withHour(locationRegularBusinessHours.getStartHour())
+					.withMinute(locationRegularBusinessHours.getStartMinute()).truncatedTo(ChronoUnit.MINUTES);
+
+			LocalDateTime end = startDateTime.withHour(locationRegularBusinessHours.getEndHour())
+					.withMinute(locationRegularBusinessHours.getEndMinute()).truncatedTo(ChronoUnit.MINUTES);
+
+			CalendarBlock calendarBlock = new CalendarBlock(locationRegularBusinessHours.getLocationID(), start, end);
+
+			addCalendarBlock(calendar, calendarBlock);
+		}
+
+	}
+
+	private void addCalendarBlock(Calendar calendar, CalendarBlock calendarBlock) {
+		this.calendarBlocks.add(calendarBlock);
+
+		calendarBlock.accept(DayLightSavingVisitor.builder(calendar.getDayLightSavingInfoByLocation()).build());
+
+		// TODO consider DST and Non business hours mixed scenarious
+		calendarBlock.accept(NonBusinessDayVisitor.builder(calendar.getNonBusinessDaysByLocation()).build());
+
+		if (calendarBlock.isOn()) {
+			onDurationInMinutes += calendarBlock.getDurationInMinutes();
+		}
+
+	}
+
+	private long getRollingSlaMinutes(LocalDateTime startDateTime, long slaInMinutes) {
+		return slaInMinutes - getAdaptedOnDurationInMinutes(startDateTime);
+	}
+
+	private long getAdaptedOnDurationInMinutes(LocalDateTime startDateTime) {
+		long adaptedOnDurationInMinutes = onDurationInMinutes;
+
+		for (Iterator<CalendarBlock> iterator = calendarBlocks.iterator(); iterator.hasNext();) {
+			CalendarBlock calendarBlock = (CalendarBlock) iterator.next();
+			if (calendarBlock.isOn()) {
+				if (!startDateTime.isBefore(calendarBlock.getStart())) {
+					adaptedOnDurationInMinutes -= Dates.diffInMinutes(startDateTime, calendarBlock.getStart())
+							+ Dates.diffInMinutes(calendarBlock.getEnd(), startDateTime);
+				}
+				if (!startDateTime.isBefore(calendarBlock.getStart())
+						&& !startDateTime.isAfter(calendarBlock.getEnd())) {
+					adaptedOnDurationInMinutes += Dates.diffInMinutes(calendarBlock.getEnd(), startDateTime);
+				}
+			}
+
+		}
+
+		return adaptedOnDurationInMinutes;
+	}
+
+	private void incCalendarBlocksDay(Calendar calendar) {
+		calendarBlocks.forEach(o -> o.nextDay());
+
+		calendarBlocks.forEach(
+				o -> o.accept(DayLightSavingVisitor.builder(calendar.getDayLightSavingInfoByLocation()).build()));
+
+		calendarBlocks
+				.forEach(o -> o.accept(NonBusinessDayVisitor.builder(calendar.getNonBusinessDaysByLocation()).build()));
+
+		updateOnDurationInMinutes();
+	}
+
+	private void updateOnDurationInMinutes() {
+		onDurationInMinutes = 0;
+		calendarBlocks.stream().filter(o -> o.isOn()).forEach(o -> onDurationInMinutes += o.getDurationInMinutes());
 	}
 
 }

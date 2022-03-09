@@ -1,52 +1,53 @@
 package com.victorfranca.duedate.calculator.multiday.nonWorkingDays;
 
-import static com.victorfranca.duedate.calculator.CalendarBlockDataBuilder.createCalendarBlock;
-import static com.victorfranca.duedate.calculator.NonBusinessDayProviderBuilder.createNonBusinessDayProvider;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.victorfranca.duedate.calculator.DueDateCalculator;
 import com.victorfranca.duedate.calendar.Calendar;
-import com.victorfranca.duedate.calendar.provider.CalendarProvider;;
+import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;;
 
 public class NonBusinessDaysTest_DifferentLocations_Test {
 
+	private Calendar calendar;
 	private DueDateCalculator dueDateCalculator;
 
 	private static final String LOCATION_ID_1 = "LOCATION_ID_1";
+	private static final int START_HOUR_1 = 3;
+	private static final int END_HOUR_1 = 6;
+
 	private static final String LOCATION_ID_2 = "LOCATION_ID_2";
+	private static final int START_HOUR_2 = 12;
+	private static final int END_HOUR_2 = 18;
+
+	@Before
+	public void inid() {
+		// Given
+		calendar = new Calendar();
+		dueDateCalculator = new DueDateCalculator();
+
+		calendar.setLocationRegularBusinessHoursList(List.of(
+
+				LocationRegularBusinessHours.builder().locationID(LOCATION_ID_1).startHour(START_HOUR_1).startMinute(0)
+						.endHour(END_HOUR_1).endMinute(0).build(),
+
+				LocationRegularBusinessHours.builder().locationID(LOCATION_ID_2).startHour(START_HOUR_2).startMinute(0)
+						.endHour(END_HOUR_2).endMinute(0).build()));
+	}
 
 	@Test
 	public void calculateDueDateTest_nonBusinessFirstDayFirstBlock_2blocks_05_00_2h() {
 		// Given
-		String nbdLocation1 = LOCATION_ID_1;
 		LocalDate nbdDate = LocalDate.of(2022, 1, 1);
 
-		String block1Location = LOCATION_ID_1;
-		LocalDateTime block1Start = LocalDateTime.of(2022, 1, 1, 3, 0);
-		LocalDateTime block1End = LocalDateTime.of(2022, 1, 1, 6, 0);
-
-		String block2Location = LOCATION_ID_2;
-		LocalDateTime block2Start = LocalDateTime.of(2022, 1, 1, 12, 0);
-		LocalDateTime block2End = LocalDateTime.of(2022, 1, 1, 18, 0);
-
-		dueDateCalculator = new DueDateCalculator(new CalendarProvider() {
-			@Override
-			public Calendar getCalendar() {
-				Calendar calendar = new Calendar();
-
-				calendar.setNonBusinessDaysProvider(createNonBusinessDayProvider(nbdLocation1, nbdDate, null, null));
-
-				calendar.addCalendarBlock(createCalendarBlock(block1Location, block1Start, block1End))
-						.addCalendarBlock(createCalendarBlock(block2Location, block2Start, block2End));
-
-				return calendar;
-			}
-		});
+		calendar.setNonBusinessDaysByLocation(Map.of(LOCATION_ID_1, List.of(nbdDate)));
 
 		// WHen
 		int slaInMinutes = 60 * 2;
@@ -54,39 +55,15 @@ public class NonBusinessDaysTest_DifferentLocations_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 14, 00),
-				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
 	}
 
 	@Test
 	public void calculateDueDateTest_nonBusinessFirstDayFirstBlock_2blocks_05_00_420h() {
 		// Given
-		String nbdLocation = LOCATION_ID_1;
 		LocalDate nbdDate = LocalDate.of(2022, 1, 1);
 
-		String block1Location = LOCATION_ID_1;
-		LocalDateTime block1Start = LocalDateTime.of(2022, 1, 1, 3, 0);
-		LocalDateTime block1End = LocalDateTime.of(2022, 1, 1, 6, 0);
-
-		String block2Location = LOCATION_ID_2;
-		LocalDateTime block2Start = LocalDateTime.of(2022, 1, 1, 12, 0);
-		LocalDateTime block2End = LocalDateTime.of(2022, 1, 1, 18, 0);
-
-		dueDateCalculator = new DueDateCalculator(new CalendarProvider() {
-			@Override
-			public Calendar getCalendar() {
-
-				Calendar calendar = new Calendar();
-
-				calendar.setNonBusinessDaysProvider(
-
-						createNonBusinessDayProvider(nbdLocation, nbdDate, null, null));
-
-				calendar.addCalendarBlock(createCalendarBlock(block1Location, block1Start, block1End))
-						.addCalendarBlock(createCalendarBlock(block2Location, block2Start, block2End));
-
-				return calendar;
-			}
-		});
+		calendar.setNonBusinessDaysByLocation(Map.of(LOCATION_ID_1, List.of(nbdDate)));
 
 		// When
 		int slaInMinutes = 60 * 7;
@@ -94,36 +71,15 @@ public class NonBusinessDaysTest_DifferentLocations_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 2, 4, 00),
-				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
 	}
 
 	@Test
 	public void calculateDueDateTest_nonBusinessSecondtDayFirstBlock_2blocks_17_00_2h() {
 		// Given
-		String nbdLocation1 = LOCATION_ID_1;
 		LocalDate nbdDate = LocalDate.of(2022, 1, 2);
 
-		String block1Location = LOCATION_ID_1;
-		LocalDateTime block1Start = LocalDateTime.of(2022, 1, 1, 3, 0);
-		LocalDateTime block1End = LocalDateTime.of(2022, 1, 1, 6, 0);
-
-		String block2Location = LOCATION_ID_2;
-		LocalDateTime block2Start = LocalDateTime.of(2022, 1, 1, 12, 0);
-		LocalDateTime block2End = LocalDateTime.of(2022, 1, 1, 18, 0);
-
-		dueDateCalculator = new DueDateCalculator(new CalendarProvider() {
-			@Override
-			public Calendar getCalendar() {
-				Calendar calendar = new Calendar();
-
-				calendar.setNonBusinessDaysProvider(createNonBusinessDayProvider(nbdLocation1, nbdDate, null, null));
-
-				calendar.addCalendarBlock(createCalendarBlock(block1Location, block1Start, block1End))
-						.addCalendarBlock(createCalendarBlock(block2Location, block2Start, block2End));
-
-				return calendar;
-			}
-		});
+		calendar.setNonBusinessDaysByLocation(Map.of(LOCATION_ID_1, List.of(nbdDate)));
 
 		// When
 		int slaInMinutes = 60 * 2;
@@ -131,7 +87,7 @@ public class NonBusinessDaysTest_DifferentLocations_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 2, 13, 00),
-				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
 	}
 
 }

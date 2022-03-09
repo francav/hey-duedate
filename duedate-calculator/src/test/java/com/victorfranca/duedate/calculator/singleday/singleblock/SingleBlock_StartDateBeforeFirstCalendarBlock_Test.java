@@ -1,64 +1,60 @@
 package com.victorfranca.duedate.calculator.singleday.singleblock;
 
-import static com.victorfranca.duedate.calculator.CalendarBlockDataBuilder.createCalendarBlock;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.victorfranca.duedate.calculator.DueDateCalculator;
 import com.victorfranca.duedate.calendar.Calendar;
-import com.victorfranca.duedate.calendar.provider.CalendarProvider;
-import com.victorfranca.duedate.calendar.Calendar;
+import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
 
 public class SingleBlock_StartDateBeforeFirstCalendarBlock_Test {
 
+	private Calendar calendar;
 	private DueDateCalculator dueDateCalculator;
 
 	private static final String LOCATION_ID_1 = "LOCATION_ID_1";
 
+	private static final int START_HOUR_1 = 3;
+	private static final int END_HOUR_1 = 6;
+
 	@Before
 	public void inid() {
-		//Given
-		String block1Location = LOCATION_ID_1;
-		LocalDateTime block1Start = LocalDateTime.of(2022, 1, 1, 3, 0);
-		LocalDateTime block1End = LocalDateTime.of(2022, 1, 1, 6, 0);
+		// Given
+		calendar = new Calendar();
+		dueDateCalculator = new DueDateCalculator();
 
-		dueDateCalculator = new DueDateCalculator(new CalendarProvider() {
-			@Override
-			public Calendar getCalendar() {
-				Calendar calendar = new Calendar();
+		calendar.setLocationRegularBusinessHoursList(
+				List.of(LocationRegularBusinessHours.builder().locationID(LOCATION_ID_1).startHour(START_HOUR_1)
+						.startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
 
-				calendar.addCalendarBlock(createCalendarBlock(block1Location, block1Start, block1End));
-
-				return calendar;
-			}
-		});
 	}
 
 	@Test
 	public void calculateDueDateTest_01_00_1h() {
-		//When
+		// When
 		int slaInMinutes = 60 * 1;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 1, 00);
 
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 4, 00),
-				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
 
 	}
 
 	@Test
 	public void calculateDueDateTest_01_01_1h() {
-		//When
+		// When
 		int slaInMinutes = 60 * 1;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 1, 01);
 
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 4, 00),
-				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
 	}
 
 }

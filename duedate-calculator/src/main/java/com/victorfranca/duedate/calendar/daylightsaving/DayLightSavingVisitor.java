@@ -6,7 +6,6 @@ import java.util.Map;
 import com.victorfranca.duedate.Dates;
 import com.victorfranca.duedate.calendar.CalendarBlock;
 import com.victorfranca.duedate.calendar.CalendarBlockVisitor;
-import com.victorfranca.duedate.calendar.provider.DayLightSavingProvider;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,19 +14,17 @@ import lombok.Builder;
 @Builder(builderMethodName = "hiddenBuilder")
 public class DayLightSavingVisitor implements CalendarBlockVisitor {
 
-	private DayLightSavingProvider dayLightSavingProvider;
-	
-	public static DayLightSavingVisitorBuilder builder(DayLightSavingProvider dayLightSavingProvider) {
-		return hiddenBuilder().dayLightSavingProvider(dayLightSavingProvider);
+	private Map<String, List<DayLightSavingInfo>> dayLightSavingInfoByLocation;
+
+	public static DayLightSavingVisitorBuilder builder(
+			Map<String, List<DayLightSavingInfo>> dayLightSavingInfoByLocation) {
+		return hiddenBuilder().dayLightSavingInfoByLocation(dayLightSavingInfoByLocation);
 	}
 
 	@Override
 	public void visit(CalendarBlock calendarBlock) {
 
-		if (dayLightSavingProvider != null) {
-			Map<String, List<DayLightSavingInfo>> dayLightSavingInfoByLocation = dayLightSavingProvider
-					.getDayLightSavingInfoByLocation();
-
+		if (dayLightSavingInfoByLocation != null) {
 			if (dayLightSavingInfoByLocation.containsKey(calendarBlock.getLocationId())) {
 
 				List<DayLightSavingInfo> dayLightSavingInfoList = dayLightSavingInfoByLocation

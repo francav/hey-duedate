@@ -7,7 +7,6 @@ import java.util.Map;
 import com.victorfranca.duedate.Dates;
 import com.victorfranca.duedate.calendar.CalendarBlock;
 import com.victorfranca.duedate.calendar.CalendarBlockVisitor;
-import com.victorfranca.duedate.calendar.provider.NonBusinessDayProvider;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,10 +15,10 @@ import lombok.Builder;
 @Builder(builderMethodName = "hiddenBuilder")
 public class NonBusinessDayVisitor implements CalendarBlockVisitor {
 
-	private NonBusinessDayProvider nonBusinessDaysProvider;
+	private Map<String, List<LocalDate>> nonBusinessDaysByLocation;
 
-	public static NonBusinessDayVisitorBuilder builder(NonBusinessDayProvider nonBusinessDaysProvider) {
-		return hiddenBuilder().nonBusinessDaysProvider(nonBusinessDaysProvider);
+	public static NonBusinessDayVisitorBuilder builder(Map<String, List<LocalDate>> nonBusinessDaysByLocation) {
+		return hiddenBuilder().nonBusinessDaysByLocation(nonBusinessDaysByLocation);
 	}
 
 	@Override
@@ -31,17 +30,15 @@ public class NonBusinessDayVisitor implements CalendarBlockVisitor {
 	// may fall in next day (unit test this)
 	private boolean isNonBusinessHour(CalendarBlock calendarBlock) {
 
-		if (nonBusinessDaysProvider == null) {
+		if (nonBusinessDaysByLocation == null) {
 			return false;
 		} else {
 
-			if (!nonBusinessDaysProvider.getNonBusinessDaysByLocation().containsKey(calendarBlock.getLocationId())) {
+			if (!nonBusinessDaysByLocation.containsKey(calendarBlock.getLocationId())) {
 				return false;
 			}
 
-			Map<String, List<LocalDate>> nonBusinessDaysMap = nonBusinessDaysProvider.getNonBusinessDaysByLocation();
-
-			return nonBusinessDaysMap.get(calendarBlock.getLocationId()).stream()
+			return nonBusinessDaysByLocation.get(calendarBlock.getLocationId()).stream()
 					.anyMatch(o -> Dates.isSameDay(o, calendarBlock.getStart().toLocalDate()));
 		}
 	}

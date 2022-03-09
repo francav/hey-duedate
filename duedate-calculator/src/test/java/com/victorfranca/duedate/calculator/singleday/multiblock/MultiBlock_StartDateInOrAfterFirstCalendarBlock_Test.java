@@ -1,53 +1,51 @@
 package com.victorfranca.duedate.calculator.singleday.multiblock;
 
-import static com.victorfranca.duedate.calculator.CalendarBlockDataBuilder.createCalendarBlock;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.victorfranca.duedate.calculator.DueDateCalculator;
 import com.victorfranca.duedate.calendar.Calendar;
-import com.victorfranca.duedate.calendar.provider.CalendarProvider;
-import com.victorfranca.duedate.calendar.Calendar;
+import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
 
 public class MultiBlock_StartDateInOrAfterFirstCalendarBlock_Test {
 
+	private Calendar calendar;
 	private DueDateCalculator dueDateCalculator;
 
 	private static final String LOCATION_ID_1 = "LOCATION_ID_1";
+	private static final int START_HOUR_1 = 3;
+	private static final int END_HOUR_1 = 6;
+
 	private static final String LOCATION_ID_2 = "LOCATION_ID_2";
+	private static final int START_HOUR_2 = 12;
+	private static final int END_HOUR_2 = 18;
+
 	private static final String LOCATION_ID_3 = "LOCATION_ID_3";
+	private static final int START_HOUR_3 = 20;
+	private static final int END_HOUR_3 = 23;
 
 	@Before
 	public void inid() {
-		//Given
-		String block1Location = LOCATION_ID_1;
-		LocalDateTime block1Start = LocalDateTime.of(2022, 1, 1, 3, 0);
-		LocalDateTime block1End = LocalDateTime.of(2022, 1, 1, 6, 0);
+		// Given
+		calendar = new Calendar();
+		dueDateCalculator = new DueDateCalculator();
 
-		String block2Location = LOCATION_ID_2;
-		LocalDateTime block2Start = LocalDateTime.of(2022, 1, 1, 12, 0);
-		LocalDateTime block2End = LocalDateTime.of(2022, 1, 1, 18, 0);
+		calendar.setLocationRegularBusinessHoursList(List.of(
 
-		String block3Location = LOCATION_ID_3;
-		LocalDateTime block3Start = LocalDateTime.of(2022, 1, 1, 20, 0);
-		LocalDateTime block3End = LocalDateTime.of(2022, 1, 1, 23, 0);
+				LocationRegularBusinessHours.builder().locationID(LOCATION_ID_1).startHour(START_HOUR_1).startMinute(0)
+						.endHour(END_HOUR_1).endMinute(0).build(),
 
-		dueDateCalculator = new DueDateCalculator(new CalendarProvider() {
-			@Override
-			public Calendar getCalendar() {
-				Calendar calendar = new Calendar();
+				LocationRegularBusinessHours.builder().locationID(LOCATION_ID_2).startHour(START_HOUR_2).startMinute(0)
+						.endHour(END_HOUR_2).endMinute(0).build(),
 
-				calendar.addCalendarBlock(createCalendarBlock(block1Location, block1Start, block1End))
-						.addCalendarBlock(createCalendarBlock(block2Location, block2Start, block2End))
-						.addCalendarBlock(createCalendarBlock(block3Location, block3Start, block3End));
+				LocationRegularBusinessHours.builder().locationID(LOCATION_ID_3).startHour(START_HOUR_3).startMinute(0)
+						.endHour(END_HOUR_3).endMinute(0).build()));
 
-				return calendar;
-			}
-		});
 	}
 
 	//////////////////////////////////////
@@ -56,35 +54,35 @@ public class MultiBlock_StartDateInOrAfterFirstCalendarBlock_Test {
 
 	@Test
 	public void calculateDueDateTest_2blocks_03_00_4h() {
-		//When
+		// When
 		int slaInMinutes = 60 * 4;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 3, 00);
 
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 13, 00),
-				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
 	}
 
 	@Test
 	public void calculateDueDateTest_2blocks_03_01_4h() {
-		//When
+		// When
 		int slaInMinutes = 60 * 4;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 3, 01);
 
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 13, 01),
-				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
 	}
 
 	@Test
 	public void calculateDueDateTest_2_blocks_03_59_4h() {
-		//When
+		// When
 		int slaInMinutes = 60 * 4;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 3, 59);
 
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 13, 59),
-				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
 	}
 
 	//////////////////////////////////////
@@ -93,13 +91,13 @@ public class MultiBlock_StartDateInOrAfterFirstCalendarBlock_Test {
 
 	@Test
 	public void calculateDueDateTest_2blocks_03_00_10h() {
-		//When
+		// When
 		int slaInMinutes = 60 * 10;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 3, 00);
 
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 21, 00),
-				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
 	}
 
 }
