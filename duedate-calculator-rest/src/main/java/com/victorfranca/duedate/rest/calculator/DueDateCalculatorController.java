@@ -8,11 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.victorfranca.duedate.calculator.CalendarProvider;
 import com.victorfranca.duedate.calculator.DueDateCalculator;
 import com.victorfranca.duedate.calendar.Calendar;
 import com.victorfranca.duedate.calendar.CalendarBlock;
-import com.victorfranca.duedate.calendar.CalendarDay;
+import com.victorfranca.duedate.calendar.provider.CalendarProvider;
 
 @RestController
 @RequestMapping("/duedate")
@@ -29,14 +28,14 @@ class DueDateCalculatorController {
 			@Override
 			public Calendar getCalendar() {
 
-				CalendarDay calendarDay = new CalendarDay();
+				Calendar calendar = new Calendar();
 				CalendarBlock calendarBlock1 = new CalendarBlock(LOCATION_ID_1,
 						startDateTime.withHour(3).withMinute(0).withSecond(0).withNano(0),
 						startDateTime.withHour(6).withMinute(0).withSecond(0).withNano(0));
 
-				calendarDay.addCalendarBlock(calendarBlock1);
+				calendar.addCalendarBlock(calendarBlock1);
 
-				return new Calendar(calendarDay);
+				return calendar;
 			}
 		});
 
