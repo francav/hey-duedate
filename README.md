@@ -1,2 +1,2 @@
 # multilocation-duedate-calculator
-Calculates tasks Due Dates using multi location calendars and SLAs.
+Calculates tasks Due Dates based on complex SLAs and different locations Time Zones, Business Hours and Daylight Saving times.
