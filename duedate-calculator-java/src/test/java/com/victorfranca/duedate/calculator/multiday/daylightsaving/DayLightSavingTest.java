@@ -1,7 +1,7 @@
 package com.victorfranca.duedate.calculator.multiday.daylightsaving;
 
 import static com.victorfranca.duedate.calculator.CalendarBlockDataBuilder.createCalendarBlock;
-import static com.victorfranca.duedate.calculator.DayLightSavingProviderFactoryBuilder.createDayLightSavingProviderFactory;
+import static com.victorfranca.duedate.calculator.DayLightSavingProviderBuilder.createDayLightSavingProvider;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ public class DayLightSavingTest {
 
 	@Test
 	public void calculateDueDateTest_DSTStartsAfter_2h() {
-		//Given
+		// Given
 		String dstLocation = LOCATION_ID_1;
 		LocalDateTime dstStart = LocalDateTime.of(2022, 1, 1, 1, 0);
 		LocalDateTime dstEnd = LocalDateTime.of(2022, 1, 2, 2, 0);
@@ -38,8 +38,8 @@ public class DayLightSavingTest {
 			public Calendar getCalendar() {
 				CalendarDay calendarDay = new CalendarDay();
 
-				calendarDay.setDayLightSavingProviderFactory(
-						createDayLightSavingProviderFactory(dstLocation, dstStart, dstEnd, dstOffset));
+				calendarDay.setDayLightSavingProvider(
+						createDayLightSavingProvider(dstLocation, dstStart, dstEnd, dstOffset));
 
 				calendarDay.addCalendarBlock(createCalendarBlock(block1Location, block1Start, block1End));
 
@@ -47,18 +47,18 @@ public class DayLightSavingTest {
 			}
 		});
 
-		//When
+		// When
 		int slaInMinutes = 60 * 2;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 00, 00);
 
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 06, 00),
 				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
 	}
 
 	@Test
 	public void calculateDueDateTest_DSTBefore_2h() {
-		//Given
+		// Given
 		String dstLocation = LOCATION_ID_1;
 		LocalDateTime dstStart = LocalDateTime.of(2022, 1, 1, 1, 0);
 		LocalDateTime dstEnd = LocalDateTime.of(2022, 1, 2, 2, 0);
@@ -74,8 +74,8 @@ public class DayLightSavingTest {
 			public Calendar getCalendar() {
 				CalendarDay calendarDay = new CalendarDay();
 
-				calendarDay.setDayLightSavingProviderFactory(
-						createDayLightSavingProviderFactory(dstLocation, dstStart, dstEnd, dstOffset));
+				calendarDay.setDayLightSavingProvider(
+						createDayLightSavingProvider(dstLocation, dstStart, dstEnd, dstOffset));
 
 				calendarDay.addCalendarBlock(createCalendarBlock(block1Location, block1Start, block1End));
 
@@ -84,12 +84,11 @@ public class DayLightSavingTest {
 			}
 		});
 
-		//When
+		// When
 		int slaInMinutes = 60 * 2;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 02, 00);
 
-		
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 06, 00),
 				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
 	}
@@ -97,7 +96,7 @@ public class DayLightSavingTest {
 	@Test
 	public void calculateDueDateTest_DSTStartsAt_2h() {
 
-		//Given
+		// Given
 		String dstLocation = LOCATION_ID_1;
 		LocalDateTime dstStart = LocalDateTime.of(2022, 1, 1, 1, 0);
 		LocalDateTime dstEnd = LocalDateTime.of(2022, 1, 2, 2, 0);
@@ -113,8 +112,8 @@ public class DayLightSavingTest {
 			public Calendar getCalendar() {
 				CalendarDay calendarDay = new CalendarDay();
 
-				calendarDay.setDayLightSavingProviderFactory(
-						createDayLightSavingProviderFactory(dstLocation, dstStart, dstEnd, dstOffset));
+				calendarDay.setDayLightSavingProvider(
+						createDayLightSavingProvider(dstLocation, dstStart, dstEnd, dstOffset));
 
 				calendarDay.addCalendarBlock(createCalendarBlock(block1Location, block1Start, block1End));
 
@@ -122,19 +121,18 @@ public class DayLightSavingTest {
 			}
 		});
 
-		//When
+		// When
 		int slaInMinutes = 60 * 2;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 01, 00);
 
-		
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 06, 00),
 				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
 	}
 
 	@Test
 	public void calculateDueDateTest_DSTEndsAfter_2h() {
-		//Given
+		// Given
 		String dstLocation = LOCATION_ID_1;
 		LocalDateTime dstStart = LocalDateTime.of(2022, 1, 1, 0, 0);
 		LocalDateTime dstEnd = LocalDateTime.of(2022, 1, 1, 8, 0);
@@ -150,8 +148,8 @@ public class DayLightSavingTest {
 			public Calendar getCalendar() {
 				CalendarDay calendarDay = new CalendarDay();
 
-				calendarDay.setDayLightSavingProviderFactory(
-						createDayLightSavingProviderFactory(dstLocation, dstStart, dstEnd, dstOffset));
+				calendarDay.setDayLightSavingProvider(
+						createDayLightSavingProvider(dstLocation, dstStart, dstEnd, dstOffset));
 
 				calendarDay.addCalendarBlock(createCalendarBlock(block1Location, block1Start, block1End));
 
@@ -159,19 +157,18 @@ public class DayLightSavingTest {
 			}
 		});
 
-		//When
+		// When
 		int slaInMinutes = 60 * 2;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 3, 00);
 
-		
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 06, 00),
 				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
 	}
 
 	@Test
 	public void calculateDueDateTest_DSTEndsBefore_2h() {
-		//Given
+		// Given
 		String dstLocation1 = LOCATION_ID_1;
 		LocalDateTime dstStart = LocalDateTime.of(2022, 1, 1, 0, 0);
 		LocalDateTime dstEnd = LocalDateTime.of(2022, 1, 1, 2, 0);
@@ -187,8 +184,8 @@ public class DayLightSavingTest {
 			public Calendar getCalendar() {
 				CalendarDay calendarDay = new CalendarDay();
 
-				calendarDay.setDayLightSavingProviderFactory(
-						createDayLightSavingProviderFactory(dstLocation1, dstStart, dstEnd, dstOffset));
+				calendarDay.setDayLightSavingProvider(
+						createDayLightSavingProvider(dstLocation1, dstStart, dstEnd, dstOffset));
 
 				calendarDay.addCalendarBlock(createCalendarBlock(block1Location1, block1Start, block1End));
 
@@ -196,19 +193,18 @@ public class DayLightSavingTest {
 			}
 		});
 
-		//When
+		// When
 		int slaInMinutes = 60 * 2;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 3, 00);
 
-		
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 05, 00),
 				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
 	}
 
 	@Test
 	public void calculateDueDateTest_DSTEndsAt_2h() {
-		//Given
+		// Given
 		String dstLocation = LOCATION_ID_1;
 		LocalDateTime dstStart = LocalDateTime.of(2022, 1, 1, 0, 0);
 		LocalDateTime dstEnd = LocalDateTime.of(2022, 1, 1, 4, 0);
@@ -224,8 +220,8 @@ public class DayLightSavingTest {
 			public Calendar getCalendar() {
 				CalendarDay calendarDay = new CalendarDay();
 
-				calendarDay.setDayLightSavingProviderFactory(
-						createDayLightSavingProviderFactory(dstLocation, dstStart, dstEnd, dstOffset));
+				calendarDay.setDayLightSavingProvider(
+						createDayLightSavingProvider(dstLocation, dstStart, dstEnd, dstOffset));
 
 				calendarDay.addCalendarBlock(createCalendarBlock(block1Location, block1Start, block1End));
 
@@ -233,12 +229,11 @@ public class DayLightSavingTest {
 			}
 		});
 
-		//When
+		// When
 		int slaInMinutes = 60 * 2;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 3, 00);
 
-		
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 05, 00),
 				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
 	}

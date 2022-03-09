@@ -1,7 +1,7 @@
 package com.victorfranca.duedate.calculator.multiday.nonWorkingDays;
 
 import static com.victorfranca.duedate.calculator.CalendarBlockDataBuilder.createCalendarBlock;
-import static com.victorfranca.duedate.calculator.NonBusinessDayProviderFactoryBuilder.createNonBusinessDayProviderFactory;
+import static com.victorfranca.duedate.calculator.NonBusinessDayProviderBuilder.createNonBusinessDayProvider;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
@@ -23,7 +23,7 @@ public class NonBusinessDaysTest_DifferentLocations_Test {
 
 	@Test
 	public void calculateDueDateTest_nonBusinessFirstDayFirstBlock_2blocks_05_00_2h() {
-		//Given
+		// Given
 		String nbdLocation1 = LOCATION_ID_1;
 		LocalDate nbdDate = LocalDate.of(2022, 1, 1);
 
@@ -40,8 +40,7 @@ public class NonBusinessDaysTest_DifferentLocations_Test {
 			public Calendar getCalendar() {
 				CalendarDay calendarDay = new CalendarDay();
 
-				calendarDay.setNonBusinessDaysProviderFactory(
-						createNonBusinessDayProviderFactory(nbdLocation1, nbdDate, null, null));
+				calendarDay.setNonBusinessDaysProvider(createNonBusinessDayProvider(nbdLocation1, nbdDate, null, null));
 
 				calendarDay.addCalendarBlock(createCalendarBlock(block1Location, block1Start, block1End))
 						.addCalendarBlock(createCalendarBlock(block2Location, block2Start, block2End));
@@ -50,18 +49,18 @@ public class NonBusinessDaysTest_DifferentLocations_Test {
 			}
 		});
 
-		//WHen
+		// WHen
 		int slaInMinutes = 60 * 2;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 05, 00);
 
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 14, 00),
 				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
 	}
 
 	@Test
 	public void calculateDueDateTest_nonBusinessFirstDayFirstBlock_2blocks_05_00_420h() {
-		//Given
+		// Given
 		String nbdLocation = LOCATION_ID_1;
 		LocalDate nbdDate = LocalDate.of(2022, 1, 1);
 
@@ -79,9 +78,9 @@ public class NonBusinessDaysTest_DifferentLocations_Test {
 
 				CalendarDay calendarDay = new CalendarDay();
 
-				calendarDay.setNonBusinessDaysProviderFactory(
+				calendarDay.setNonBusinessDaysProvider(
 
-						createNonBusinessDayProviderFactory(nbdLocation, nbdDate, null, null));
+						createNonBusinessDayProvider(nbdLocation, nbdDate, null, null));
 
 				calendarDay.addCalendarBlock(createCalendarBlock(block1Location, block1Start, block1End))
 						.addCalendarBlock(createCalendarBlock(block2Location, block2Start, block2End));
@@ -89,19 +88,19 @@ public class NonBusinessDaysTest_DifferentLocations_Test {
 				return new Calendar(calendarDay);
 			}
 		});
-		
-		//When
+
+		// When
 		int slaInMinutes = 60 * 7;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 05, 00);
 
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 2, 4, 00),
 				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
 	}
 
 	@Test
 	public void calculateDueDateTest_nonBusinessSecondtDayFirstBlock_2blocks_17_00_2h() {
-		//Given
+		// Given
 		String nbdLocation1 = LOCATION_ID_1;
 		LocalDate nbdDate = LocalDate.of(2022, 1, 2);
 
@@ -118,8 +117,7 @@ public class NonBusinessDaysTest_DifferentLocations_Test {
 			public Calendar getCalendar() {
 				CalendarDay calendarDay = new CalendarDay();
 
-				calendarDay.setNonBusinessDaysProviderFactory(
-						createNonBusinessDayProviderFactory(nbdLocation1, nbdDate, null, null));
+				calendarDay.setNonBusinessDaysProvider(createNonBusinessDayProvider(nbdLocation1, nbdDate, null, null));
 
 				calendarDay.addCalendarBlock(createCalendarBlock(block1Location, block1Start, block1End))
 						.addCalendarBlock(createCalendarBlock(block2Location, block2Start, block2End));
@@ -128,11 +126,11 @@ public class NonBusinessDaysTest_DifferentLocations_Test {
 			}
 		});
 
-		//When
+		// When
 		int slaInMinutes = 60 * 2;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 17, 00);
 
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 2, 13, 00),
 				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
 	}

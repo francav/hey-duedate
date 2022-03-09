@@ -6,10 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.victorfranca.duedate.Dates;
-import com.victorfranca.duedate.calendar.daylightsaving.DayLightSavingProviderFactory;
-import com.victorfranca.duedate.calendar.daylightsaving.DayLightSavingVisitorFactory;
-import com.victorfranca.duedate.calendar.nonbusinesshour.NonBusinessDayProviderFactory;
-import com.victorfranca.duedate.calendar.nonbusinesshour.NonBusinessDayVisitorFactory;
+import com.victorfranca.duedate.calendar.daylightsaving.DayLightSavingVisitor;
+import com.victorfranca.duedate.calendar.nonbusinesshour.NonBusinessDayVisitor;
+import com.victorfranca.duedate.calendar.provider.spi.DayLightSavingProvider;
+import com.victorfranca.duedate.calendar.provider.spi.NonBusinessDayProvider;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,9 +23,9 @@ public class CalendarDay {
 
 	private long onDurationInMinutes;
 
-	private NonBusinessDayProviderFactory nonBusinessDaysProviderFactory;
+	private NonBusinessDayProvider nonBusinessDaysProvider;
 
-	private DayLightSavingProviderFactory dayLightSavingProviderFactory;
+	private DayLightSavingProvider dayLightSavingProvider;
 
 	public CalendarDay() {
 	}
@@ -37,10 +37,10 @@ public class CalendarDay {
 	public CalendarDay addCalendarBlock(CalendarBlock calendarBlock) {
 		calendarBlocks.add(calendarBlock);
 
-		calendarBlock.accept(DayLightSavingVisitorFactory.getDayLightSavingVisitor(dayLightSavingProviderFactory));
+		calendarBlock.accept(DayLightSavingVisitor.builder(dayLightSavingProvider).build());
 
 		// TODO consider DST and Non business hours mixed scenarious
-		calendarBlock.accept(NonBusinessDayVisitorFactory.getNonBusinessDayVisitor(nonBusinessDaysProviderFactory));
+		calendarBlock.accept(NonBusinessDayVisitor.builder(nonBusinessDaysProvider).build());
 
 		if (calendarBlock.isOn()) {
 			onDurationInMinutes += calendarBlock.getDurationInMinutes();
@@ -77,11 +77,9 @@ public class CalendarDay {
 	public void incCalendarBlocksDay() {
 		calendarBlocks.forEach(o -> o.nextDay());
 
-		calendarBlocks.forEach(
-				o -> o.accept(DayLightSavingVisitorFactory.getDayLightSavingVisitor(dayLightSavingProviderFactory)));
+		calendarBlocks.forEach(o -> o.accept(DayLightSavingVisitor.builder(dayLightSavingProvider).build()));
 
-		calendarBlocks.forEach(
-				o -> o.accept(NonBusinessDayVisitorFactory.getNonBusinessDayVisitor(nonBusinessDaysProviderFactory)));
+		calendarBlocks.forEach(o -> o.accept(NonBusinessDayVisitor.builder(nonBusinessDaysProvider).build()));
 
 		updateOnDurationInMinutes();
 	}

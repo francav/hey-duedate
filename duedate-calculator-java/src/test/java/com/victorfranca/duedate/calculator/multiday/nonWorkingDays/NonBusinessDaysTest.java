@@ -1,7 +1,7 @@
 package com.victorfranca.duedate.calculator.multiday.nonWorkingDays;
 
 import static com.victorfranca.duedate.calculator.CalendarBlockDataBuilder.createCalendarBlock;
-import static com.victorfranca.duedate.calculator.NonBusinessDayProviderFactoryBuilder.createNonBusinessDayProviderFactory;
+import static com.victorfranca.duedate.calculator.NonBusinessDayProviderBuilder.createNonBusinessDayProvider;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
@@ -23,7 +23,7 @@ public class NonBusinessDaysTest {
 
 	@Test
 	public void calculateDueDateTest_nonBusinessFirstDay_2blocks_17_00_2h() {
-		//Given
+		// Given
 		String nbdLocation1 = LOCATION_ID_1;
 		LocalDate nbdDate1 = LocalDate.of(2022, 1, 1);
 
@@ -43,8 +43,8 @@ public class NonBusinessDaysTest {
 			public Calendar getCalendar() {
 				CalendarDay calendarDay = new CalendarDay();
 
-				calendarDay.setNonBusinessDaysProviderFactory(
-						createNonBusinessDayProviderFactory(nbdLocation1, nbdDate1, nbdLocation2, nbdDate2));
+				calendarDay.setNonBusinessDaysProvider(
+						createNonBusinessDayProvider(nbdLocation1, nbdDate1, nbdLocation2, nbdDate2));
 
 				calendarDay.addCalendarBlock(createCalendarBlock(block1Location2, block1Start, block1End))
 						.addCalendarBlock(createCalendarBlock(block2Location, block2Start, block2End));
@@ -53,18 +53,18 @@ public class NonBusinessDaysTest {
 			}
 		});
 
-		//When
+		// When
 		int slaInMinutes = 60 * 2;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 17, 00);
 
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 2, 05, 00),
 				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
 	}
 
 	@Test
 	public void calculateDueDateTest_nonBusinessSecondDay_2blocks_17_00_2h() {
-		//Given
+		// Given
 		String nbdLocation1 = LOCATION_ID_1;
 		LocalDate nbdDate1 = LocalDate.of(2022, 1, 2);
 
@@ -84,8 +84,8 @@ public class NonBusinessDaysTest {
 			public Calendar getCalendar() {
 				CalendarDay calendarDay = new CalendarDay();
 
-				calendarDay.setNonBusinessDaysProviderFactory(
-						createNonBusinessDayProviderFactory(nbdLocation1, nbdDate1, nbdLocation2, nbdDate2));
+				calendarDay.setNonBusinessDaysProvider(
+						createNonBusinessDayProvider(nbdLocation1, nbdDate1, nbdLocation2, nbdDate2));
 
 				calendarDay.addCalendarBlock(createCalendarBlock(block1Location2, block1Start, block1End))
 						.addCalendarBlock(createCalendarBlock(block2Location, block2Start, block2End));
@@ -94,11 +94,11 @@ public class NonBusinessDaysTest {
 			}
 		});
 
-		//When
+		// When
 		int slaInMinutes = 60 * 2;
 		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 17, 00);
 
-		//Then
+		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 3, 04, 00),
 				dueDateCalculator.calculateDueDate(startDateTime, slaInMinutes));
 	}
