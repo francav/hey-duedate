@@ -77,7 +77,7 @@ class App extends Component {
           className="btn btn-primary"
           onClick={this.handleClick}
         >
-          Submit
+          Due to?
         </button>
 
         <Row>

@@ -1,0 +1,55 @@
+{
+	"regularBusinessHours": [
+		{
+			"location": "Hong Kong",
+			"startHour": "1",
+			"startMinute": "0",
+			"endHour": "5",
+			"endMinute": "0"
+		},
+		{
+			"location": "Ireland",
+			"startHour": "6",
+			"startMinute": "0",
+			"endHour": "9",
+			"endMinute": "0"
+		},
+		{
+			"location": "United States",
+			"startHour": "13",
+			"startMinute": "0",
+			"endHour": "23",
+			"endMinute": "30"
+		}
+	],
+	"nonBusinessHoursDays": [
+		{
+			"location": "Ireland",
+			"value": [
+				"2022-12-31",
+				"2022-03-17"
+			]
+		},
+		{
+			"location": "United States",
+			"value": [
+				"2022-12-31",
+				"2022-07-04"
+			]
+		}
+	],
+	"daylightSavingTimeInfo": [
+		{
+			"location": "Ireland",
+			"start": "2022-03-27T01:00:00",
+			"end": "2022-10-30T02:00:00",
+			"offsetInMinutes": "60"
+		},
+		{
+			"location": "United States",
+			"start": "2022-03-13T02:00:00",
+			"end": "2022-11-06T02:00:00",
+			"offsetInMinutes": "60"
+		}
+	]
+}

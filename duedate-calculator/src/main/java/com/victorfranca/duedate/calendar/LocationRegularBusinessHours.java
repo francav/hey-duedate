@@ -8,12 +8,18 @@ import lombok.Getter;
 @Getter
 public class LocationRegularBusinessHours {
 
-	private String locationID;
+	private String location;
 
-	private int startHour;
-	private int startMinute;
+	@Builder.Default
+	private int startHour = -1;
+	
+	@Builder.Default
+	private int startMinute = -1;
 
-	private int endHour;
-	private int endMinute;
+	@Builder.Default
+	private int endHour = -1;
+	
+	@Builder.Default
+	private int endMinute = -1;
 
 }

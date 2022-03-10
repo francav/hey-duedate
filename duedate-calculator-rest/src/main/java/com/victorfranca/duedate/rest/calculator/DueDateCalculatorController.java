@@ -1,8 +1,15 @@
 package com.victorfranca.duedate.rest.calculator;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.List;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,26 +18,54 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.victorfranca.duedate.calculator.DueDateCalculator;
 import com.victorfranca.duedate.calendar.Calendar;
-import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
+import com.victorfranca.duedate.calendar.provider.json.JSONCalendarProvider;
+import com.victorfranca.duedate.calendar.provider.spi.CalendarDataSourceElementNotFound;
+import com.victorfranca.duedate.calendar.provider.spi.CalendarProvider;
+import com.victorfranca.duedate.calendar.provider.spi.InvalidCalendarDataSourceException;
 
 @RestController
 @RequestMapping("/duedate")
 class DueDateCalculatorController {
 
-	private static final String LOCATION_ID_1 = "LOCATION_ID_1";
-
 	@GetMapping(value = "/{startDateTime}/{slaInMinutes}")
-	public LocalDateTime findById(
+	public LocalDateTime getDueDate(
 			@PathVariable("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
 			@PathVariable("slaInMinutes") Integer slaInMinutes) {
 
-		Calendar calendar = new Calendar();
+		CalendarProvider jsonCalendarProvider = null;
+		Calendar calendar = null;
+		try {
+			jsonCalendarProvider = new JSONCalendarProvider(getCalendarData("calendar.json"));
+			calendar = jsonCalendarProvider.createCalendar();
+		} catch (InvalidCalendarDataSourceException | CalendarDataSourceElementNotFound | URISyntaxException
+				| IOException | ParseException e) {
+			throw new RuntimeException("Internal Error");
+		}
 
-		calendar.setLocationRegularBusinessHoursList(List.of(LocationRegularBusinessHours.builder()
-				.locationID(LOCATION_ID_1).startHour(3).startMinute(0).endHour(6).endMinute(0).build()));
+		return new DueDateCalculator().calculateDueDate(calendar, startDateTime, slaInMinutes);
 
-		DueDateCalculator dueDateCalculator = new DueDateCalculator();
-		return dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes);
+	}
+
+	public JSONObject getCalendarData(String fileName) throws URISyntaxException, IOException, ParseException {
+		JSONParser jsonParser = new JSONParser();
+
+		FileReader reader = new FileReader(getFileFromResource(fileName));
+		return (JSONObject) jsonParser.parse(reader);
+	}
+
+	private File getFileFromResource(String fileName) throws URISyntaxException {
+
+		ClassLoader classLoader = DueDateCalculatorController.class.getClassLoader();
+		URL resource = classLoader.getResource(fileName);
+		if (resource == null) {
+			throw new IllegalArgumentException("File not found! " + fileName);
+		} else {
+			try {
+				return new File(resource.toURI());
+			} catch (URISyntaxException e) {
+				throw e;
+			}
+		}
 
 	}
 

@@ -4,6 +4,6 @@ import com.victorfranca.duedate.calendar.Calendar;
 
 public interface CalendarProvider {
 
-	public Calendar getCalendar();
+	public Calendar createCalendar() throws CalendarDataSourceElementNotFound, InvalidCalendarDataSourceException;
 
 }

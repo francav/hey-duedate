@@ -78,7 +78,7 @@ public class DueDateCalculator {
 		calendarBlocks = new ArrayList<>();
 
 		for (LocationRegularBusinessHours locationRegularBusinessHours : calendar
-				.getLocationRegularBusinessHoursList()) {
+				.getRegularBusinessHours()) {
 
 			LocalDateTime start = startDateTime.withHour(locationRegularBusinessHours.getStartHour())
 					.withMinute(locationRegularBusinessHours.getStartMinute()).truncatedTo(ChronoUnit.MINUTES);
@@ -86,7 +86,7 @@ public class DueDateCalculator {
 			LocalDateTime end = startDateTime.withHour(locationRegularBusinessHours.getEndHour())
 					.withMinute(locationRegularBusinessHours.getEndMinute()).truncatedTo(ChronoUnit.MINUTES);
 
-			CalendarBlock calendarBlock = new CalendarBlock(locationRegularBusinessHours.getLocationID(), start, end);
+			CalendarBlock calendarBlock = new CalendarBlock(locationRegularBusinessHours.getLocation(), start, end);
 
 			addCalendarBlock(calendar, calendarBlock);
 		}

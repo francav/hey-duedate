@@ -8,40 +8,41 @@
 		<artifactId>multilocation-duedate-calculator</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	
+
 	<artifactId>duedate-calculator-rest</artifactId>
 	<packaging>jar</packaging>
 
 	<name>duedate-calculator-rest</name>
-	
+
 	<properties>
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.compiler.source>11</maven.compiler.source>
 		<spring.boot.version>2.6.4</spring.boot.version>
+		<duedate-calculator.version>1.0-SNAPSHOT</duedate-calculator.version>
 	</properties>
 
 	<dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-	
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.victorfranca</groupId>
 			<artifactId>duedate-calculator</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${duedate-calculator.version}</version>
 		</dependency>
 
 		<dependency>

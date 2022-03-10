@@ -28,8 +28,8 @@ public class SingleBlock_StartDateBeforeFirstCalendarBlock_Test {
 		calendar = new Calendar();
 		dueDateCalculator = new DueDateCalculator();
 
-		calendar.setLocationRegularBusinessHoursList(
-				List.of(LocationRegularBusinessHours.builder().locationID(LOCATION_ID_1).startHour(START_HOUR_1)
+		calendar.setRegularBusinessHours(
+				List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1).startHour(START_HOUR_1)
 						.startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
 
 	}
