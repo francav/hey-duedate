@@ -1,4 +1,4 @@
-package com.victorfranca.duedate.calendar.provider;
+package com.victorfranca.duedate.calendar.provider.spi;
 
 import com.victorfranca.duedate.calendar.Calendar;
 

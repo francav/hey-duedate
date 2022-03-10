@@ -1,4 +1,4 @@
-package com.victorfranca.duedate.calendar.provider;
+package com.victorfranca.duedate.calendar.provider.spi;
 
 import java.time.LocalDate;
 import java.util.List;

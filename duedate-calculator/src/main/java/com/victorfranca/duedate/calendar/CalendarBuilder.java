@@ -1,8 +1,8 @@
 package com.victorfranca.duedate.calendar;
 
-import com.victorfranca.duedate.calendar.provider.CalendarProvider;
-import com.victorfranca.duedate.calendar.provider.DayLightSavingProvider;
-import com.victorfranca.duedate.calendar.provider.NonBusinessDayProvider;
+import com.victorfranca.duedate.calendar.provider.spi.CalendarProvider;
+import com.victorfranca.duedate.calendar.provider.spi.DayLightSavingProvider;
+import com.victorfranca.duedate.calendar.provider.spi.NonBusinessDayProvider;
 
 public class CalendarBuilder {
 	
