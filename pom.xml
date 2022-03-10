@@ -15,9 +15,7 @@
 	</properties>
 
 	<modules>
-		<module>duedate-calculator-utility</module>
 		<module>duedate-calculator</module>
-		<module>duedate-calculator-json-calendar-provider</module>
 		<module>duedate-calculator-rest</module>
 	</modules>
 </project>

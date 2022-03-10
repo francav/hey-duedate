@@ -1,4 +1,4 @@
-package com.victorfranca.duedate;
+package com.victorfranca.duedate.calculator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

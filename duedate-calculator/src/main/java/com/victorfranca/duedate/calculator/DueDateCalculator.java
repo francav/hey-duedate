@@ -1,12 +1,14 @@
 package com.victorfranca.duedate.calculator;
 
+import static com.victorfranca.duedate.calculator.Dates.addMinutes;
+import static com.victorfranca.duedate.calculator.Dates.diffInMinutes;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.victorfranca.duedate.Dates;
 import com.victorfranca.duedate.calendar.Calendar;
 import com.victorfranca.duedate.calendar.CalendarBlock;
 import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
@@ -36,7 +38,7 @@ public class DueDateCalculator {
 	// TODO exception when sla rolls over calendarDay onDuration
 	// Exception when SLA == ZERO
 	public LocalDateTime calculateDueDate(Calendar calendar, LocalDateTime startDateTime, long slaInMinutes) {
-		
+
 		initCalendarBlocks(calendar, startDateTime);
 
 		// TODO refactor: move to a data structure (iterator?)
@@ -61,18 +63,18 @@ public class DueDateCalculator {
 				if ((!startDateTime.isAfter(calendarBlock.getEnd()))) {
 					slaCounterInMinutes -= calendarBlock.getDurationInMinutes();
 					if (startDateTime.isAfter(calendarBlock.getStart())) {
-						long minutesDiff = Dates.diffInMinutes(startDateTime, calendarBlock.getStart());
+						long minutesDiff = diffInMinutes(startDateTime, calendarBlock.getStart());
 						slaCounterInMinutes += minutesDiff;
 					}
 				}
 			}
 		}
 
-		return Dates.addMinutes(Long.valueOf(slaCounterInMinutes).intValue(), calendarBlock.getEnd());
+		return addMinutes(Long.valueOf(slaCounterInMinutes).intValue(), calendarBlock.getEnd());
 	}
 
 	private void initCalendarBlocks(Calendar calendar, LocalDateTime startDateTime) {
-		
+
 		calendarBlocks = new ArrayList<>();
 
 		for (LocationRegularBusinessHours locationRegularBusinessHours : calendar
@@ -115,12 +117,12 @@ public class DueDateCalculator {
 			CalendarBlock calendarBlock = (CalendarBlock) iterator.next();
 			if (calendarBlock.isOn()) {
 				if (!startDateTime.isBefore(calendarBlock.getStart())) {
-					adaptedOnDurationInMinutes -= Dates.diffInMinutes(startDateTime, calendarBlock.getStart())
-							+ Dates.diffInMinutes(calendarBlock.getEnd(), startDateTime);
+					adaptedOnDurationInMinutes -= diffInMinutes(startDateTime, calendarBlock.getStart())
+							+ diffInMinutes(calendarBlock.getEnd(), startDateTime);
 				}
 				if (!startDateTime.isBefore(calendarBlock.getStart())
 						&& !startDateTime.isAfter(calendarBlock.getEnd())) {
-					adaptedOnDurationInMinutes += Dates.diffInMinutes(calendarBlock.getEnd(), startDateTime);
+					adaptedOnDurationInMinutes += diffInMinutes(calendarBlock.getEnd(), startDateTime);
 				}
 			}
 
