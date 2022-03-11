@@ -1,12 +1,12 @@
-package com.victorfranca.duedate.calendar.provider.spi;
+package com.victorfranca.duedate.calendar.provider.spi.exception;
 
-public class CalendarDataSourceElementNotFound extends Exception {
+public class CalendarElementNotFound extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
 	private String elementName;
 
-	public CalendarDataSourceElementNotFound(String elementName) {
+	public CalendarElementNotFound(String elementName) {
 		this.elementName = elementName;
 	}
 

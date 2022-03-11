@@ -1,4 +1,4 @@
-package com.victorfranca.duedate.rest;
+package com.victorfranca.duedate.api;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
