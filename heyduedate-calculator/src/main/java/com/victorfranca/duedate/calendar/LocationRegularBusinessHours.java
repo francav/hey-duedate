@@ -2,10 +2,12 @@ package com.victorfranca.duedate.calendar;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 //TODO multiple business hours windows by location
 @Builder
 @Getter
+@Setter
 public class LocationRegularBusinessHours {
 
 	private String location;

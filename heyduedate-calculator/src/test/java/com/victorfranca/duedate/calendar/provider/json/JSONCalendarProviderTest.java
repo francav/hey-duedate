@@ -13,8 +13,8 @@ import org.json.simple.JSONObject;
 import org.junit.Test;
 
 import com.victorfranca.duedate.calendar.Calendar;
-import com.victorfranca.duedate.calendar.provider.spi.CalendarDataSourceElementNotFound;
-import com.victorfranca.duedate.calendar.provider.spi.InvalidCalendarDataSourceException;
+import com.victorfranca.duedate.calendar.provider.spi.exception.CalendarElementNotFound;
+import com.victorfranca.duedate.calendar.provider.spi.exception.InvalidCalendarException;
 
 //TODO given/when/then comments
 public class JSONCalendarProviderTest {
@@ -35,7 +35,6 @@ public class JSONCalendarProviderTest {
 	private static final String DST_OFFSET_ELEMENT = "offsetInMinutes";
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void getCalendarTest_calendarShoulHaveDaylightSavingTime() {
 
 		String location = "locationValue";
@@ -46,7 +45,7 @@ public class JSONCalendarProviderTest {
 
 		String nonBusinessDate1 = "2022-03-17";
 		String nonBusinessDate2 = "2022-12-31";
-		
+
 		String dstStart = "2022-03-13T02:00:00";
 		String dstEnd = "2022-11-06T02:00:00";
 		int dstOffset = 60;
@@ -89,15 +88,14 @@ public class JSONCalendarProviderTest {
 //			assertEquals(LocalDate.parse(nonBusinessDate2),
 //					calendar.getNonBusinessDaysByLocation().get(location).get(1));
 
-		} catch (InvalidCalendarDataSourceException e) {
+		} catch (InvalidCalendarException e) {
 			fail(e.getMessage());
-		} catch (CalendarDataSourceElementNotFound e) {
+		} catch (CalendarElementNotFound e) {
 			fail(e.getMessage());
 		}
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void getCalendarTest_calendarShoulHaveNonBusinessDays() {
 
 		String location = "locationValue";
@@ -138,14 +136,13 @@ public class JSONCalendarProviderTest {
 			assertEquals(LocalDate.parse(nonBusinessDate2),
 					calendar.getNonBusinessDaysByLocation().get(location).get(1));
 
-		} catch (InvalidCalendarDataSourceException e) {
+		} catch (InvalidCalendarException e) {
 			fail(e.getMessage());
-		} catch (CalendarDataSourceElementNotFound e) {
+		} catch (CalendarElementNotFound e) {
 			fail(e.getMessage());
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void getCalendarTest_calendarShoulHaveLocation() {
 
@@ -176,9 +173,9 @@ public class JSONCalendarProviderTest {
 			assertEquals(locationEndHour, calendar.getRegularBusinessHours().get(0).getEndHour());
 			assertEquals(locationEndMinute, calendar.getRegularBusinessHours().get(0).getEndMinute());
 
-		} catch (InvalidCalendarDataSourceException e) {
+		} catch (InvalidCalendarException e) {
 			fail(e.getMessage());
-		} catch (CalendarDataSourceElementNotFound e) {
+		} catch (CalendarElementNotFound e) {
 			fail(e.getMessage());
 		}
 	}
@@ -188,7 +185,7 @@ public class JSONCalendarProviderTest {
 
 		JSONObject jsonObject = new JSONObject();
 
-		assertThrows(InvalidCalendarDataSourceException.class, () -> {
+		assertThrows(InvalidCalendarException.class, () -> {
 			new JSONCalendarProvider(jsonObject);
 		});
 
@@ -199,27 +196,25 @@ public class JSONCalendarProviderTest {
 
 		JSONObject jsonObject = new JSONObject();
 
-		assertThrows(InvalidCalendarDataSourceException.class, () -> {
+		assertThrows(InvalidCalendarException.class, () -> {
 			new JSONCalendarProvider(jsonObject);
 		});
 
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void getCalendarTest_whenEmptyNotArrayRootNode_shouldThrowException() {
 
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(CALENDAR_ELEMENT, new JSONObject());
 
-		assertThrows(InvalidCalendarDataSourceException.class, () -> {
+		assertThrows(InvalidCalendarException.class, () -> {
 			new JSONCalendarProvider(jsonObject);
 		});
 
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void getCalendarTest_whenNoLocationElement_shouldThrowException() {
 
 		JSONArray locationsArray = new JSONArray();
@@ -229,12 +224,12 @@ public class JSONCalendarProviderTest {
 		JSONObject calendarObject = new JSONObject();
 		calendarObject.put(CALENDAR_ELEMENT, locationsArray);
 
-		assertThrows(CalendarDataSourceElementNotFound.class, () -> {
+		assertThrows(CalendarElementNotFound.class, () -> {
 
 			try {
 				JSONCalendarProvider jsonCalendarProvider = new JSONCalendarProvider(calendarObject);
 				jsonCalendarProvider.createCalendar();
-			} catch (InvalidCalendarDataSourceException e) {
+			} catch (InvalidCalendarException e) {
 				fail();
 			}
 
