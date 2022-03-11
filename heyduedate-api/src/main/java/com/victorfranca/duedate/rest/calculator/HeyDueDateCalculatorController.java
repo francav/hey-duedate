@@ -25,7 +25,7 @@ import com.victorfranca.duedate.calendar.provider.spi.InvalidCalendarDataSourceE
 
 @RestController
 @RequestMapping("/duedate")
-class DueDateCalculatorController {
+class HeyDueDateCalculatorController {
 
 	@GetMapping(value = "/{startDateTime}/{slaInMinutes}")
 	public LocalDateTime getDueDate(
@@ -55,7 +55,7 @@ class DueDateCalculatorController {
 
 	private File getFileFromResource(String fileName) throws URISyntaxException {
 
-		ClassLoader classLoader = DueDateCalculatorController.class.getClassLoader();
+		ClassLoader classLoader = HeyDueDateCalculatorController.class.getClassLoader();
 		URL resource = classLoader.getResource(fileName);
 		if (resource == null) {
 			throw new IllegalArgumentException("File not found! " + fileName);

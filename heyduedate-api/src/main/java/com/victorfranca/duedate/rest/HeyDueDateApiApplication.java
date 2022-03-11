@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SlaCalculatorRestApplication {
+public class HeyDueDateApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SlaCalculatorRestApplication.class, args);
+		SpringApplication.run(HeyDueDateApiApplication.class, args);
 	}
 
 }
