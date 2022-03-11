@@ -5,20 +5,20 @@
 
 	<parent>
 		<groupId>com.victorfranca</groupId>
-		<artifactId>multilocation-duedate-calculator</artifactId>
+		<artifactId>heyduedate</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>duedate-calculator-rest</artifactId>
+	<artifactId>heyduedate-api</artifactId>
 	<packaging>jar</packaging>
 
-	<name>duedate-calculator-rest</name>
+	<name>heyduedate-api</name>
 
 	<properties>
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.compiler.source>11</maven.compiler.source>
 		<spring.boot.version>2.6.4</spring.boot.version>
-		<duedate-calculator.version>1.0-SNAPSHOT</duedate-calculator.version>
+		<heyduedate-calculator.version>1.0-SNAPSHOT</heyduedate-calculator.version>
 	</properties>
 
 	<dependencyManagement>
@@ -41,8 +41,8 @@
 
 		<dependency>
 			<groupId>com.victorfranca</groupId>
-			<artifactId>duedate-calculator</artifactId>
-			<version>${duedate-calculator.version}</version>
+			<artifactId>heyduedate-calculator</artifactId>
+			<version>${heyduedate-calculator.version}</version>
 		</dependency>
 
 		<dependency>

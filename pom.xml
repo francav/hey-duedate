@@ -4,18 +4,18 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.victorfranca</groupId>
-	<artifactId>multilocation-duedate-calculator</artifactId>
+	<artifactId>heyduedate</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>duedate-calculator</name>
+	<name>heyduedate-calculator</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<modules>
-		<module>duedate-calculator</module>
-		<module>duedate-calculator-rest</module>
+		<module>heyduedate-calculator</module>
+		<module>heyduedate-api</module>
 	</modules>
 </project>

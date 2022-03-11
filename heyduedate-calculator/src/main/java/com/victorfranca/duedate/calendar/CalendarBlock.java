@@ -2,7 +2,7 @@ package com.victorfranca.duedate.calendar;
 
 import java.time.LocalDateTime;
 
-import com.victorfranca.duedate.Dates;
+import com.victorfranca.duedate.calculator.Dates;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import com.victorfranca.duedate.Dates;
+import com.victorfranca.duedate.calculator.Dates;
 import com.victorfranca.duedate.calendar.CalendarBlock;
 import com.victorfranca.duedate.calendar.CalendarBlockVisitor;
 
