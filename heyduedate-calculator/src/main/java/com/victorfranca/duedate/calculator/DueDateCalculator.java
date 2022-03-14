@@ -37,25 +37,28 @@ public class DueDateCalculator {
 	private List<CalendarBlock> calendarBlocks;
 
 	private long onDurationInMinutes;
+	
+	private long slaCounterInMinutes = 0;
+	
+	private LocalDateTime calculatorDateTimeIterator;
+
 
 	// TODO exception when sla rolls over calendarDay onDuration
 	// Exception when SLA == ZERO
 	public LocalDateTime calculateDueDate(Calendar calendar, LocalDateTime startDateTime, long slaInMinutes) {
 
 		initCalendarBlocks(calendar, startDateTime);
+		this.slaCounterInMinutes = slaInMinutes;
+		this.calculatorDateTimeIterator = startDateTime;
 
-		// TODO refactor: move to a data structure (iterator?)
-		long slaCounterInMinutes = slaInMinutes;
-		long rollingSlaMinutes = getRollingSlaMinutes(startDateTime, slaInMinutes);
-		while (rollingSlaMinutes > 0) {
-			incCalendarBlocksDay(calendar);
-			if (rollingSlaMinutes >= 0) {
-				slaCounterInMinutes = rollingSlaMinutes;
-				startDateTime = this.calendarBlocks.get(0).getStart();
-			}
-			rollingSlaMinutes = getRollingSlaMinutes(startDateTime, rollingSlaMinutes);
-		}
+		advanceToDueDateDay(calendar, slaInMinutes);
 
+		CalendarBlock calendarBlock = getDueDateCalendarBlock();
+
+		return addMinutes(Long.valueOf(slaCounterInMinutes).intValue(), calendarBlock.getEnd());
+	}
+
+	private CalendarBlock getDueDateCalendarBlock() {
 		Iterator<CalendarBlock> calendarBlockIterator = this.calendarBlocks.iterator();
 		CalendarBlock calendarBlock = null;
 		while (slaCounterInMinutes > 0) {
@@ -63,17 +66,29 @@ public class DueDateCalculator {
 
 			// TODO implement calendarBlock.next() / calendarBlock.nextON()
 			if (calendarBlock.isOn()) {
-				if ((!startDateTime.isAfter(calendarBlock.getEnd()))) {
+				if ((!calculatorDateTimeIterator.isAfter(calendarBlock.getEnd()))) {
 					slaCounterInMinutes -= calendarBlock.getDurationInMinutes();
-					if (startDateTime.isAfter(calendarBlock.getStart())) {
-						long minutesDiff = diffInMinutes(startDateTime, calendarBlock.getStart());
+					if (calculatorDateTimeIterator.isAfter(calendarBlock.getStart())) {
+						long minutesDiff = diffInMinutes(calculatorDateTimeIterator, calendarBlock.getStart());
 						slaCounterInMinutes += minutesDiff;
 					}
 				}
 			}
 		}
+		return calendarBlock;
+	}
 
-		return addMinutes(Long.valueOf(slaCounterInMinutes).intValue(), calendarBlock.getEnd());
+	private void advanceToDueDateDay(Calendar calendar, long slaInMinutes) {
+		// TODO refactor: move to a data structure (iterator?)
+		long rollingSlaMinutes = getRollingSlaMinutes(calculatorDateTimeIterator, slaInMinutes);
+		while (rollingSlaMinutes > 0) {
+			incCalendarBlocksDay(calendar);
+			if (rollingSlaMinutes >= 0) {
+				slaCounterInMinutes = rollingSlaMinutes;
+				calculatorDateTimeIterator = this.calendarBlocks.get(0).getStart();
+			}
+			rollingSlaMinutes = getRollingSlaMinutes(calculatorDateTimeIterator, rollingSlaMinutes);
+		}
 	}
 
 	private void initCalendarBlocks(Calendar calendar, LocalDateTime startDateTime) {
