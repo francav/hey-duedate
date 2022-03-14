@@ -12,6 +12,8 @@ import Button from "react-bootstrap/Button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+import Table from "react-bootstrap/Table";
+
 import "./App.css";
 
 import axios from "axios";
@@ -23,6 +25,7 @@ class App extends Component {
       startDateTime: "",
       dueDateTime: "",
       sla: "",
+      calculationLogBlocks: [],
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -43,11 +46,15 @@ class App extends Component {
         "http://localhost:8080/duedate/" +
           this.state.startDateTime.toISOString() +
           "/" +
-          this.state.sla
+          this.state.sla +
+          "/log"
       )
-      .then((response) =>
-        this.setState({ dueDateTime: new Date(response.data).toString() })
-      )
+      .then((response) => {
+        this.setState({
+          dueDateTime: new Date(response.data.dueDateTime).toLocaleString(),
+          calculationLogBlocks: response.data.calculationLogBlocks,
+        });
+      })
       .catch((error) => this.setState({ dueDateTime: error.message }));
   }
 
@@ -108,6 +115,32 @@ class App extends Component {
           <Col>
             {this.state.dueDateTime}
             {this.state.errorMessage}
+          </Col>
+        </Row>
+
+        <Row className="p-5">
+          <Col>
+            <Table responsive>
+              <thead>
+                <tr>
+                  <th>Start</th>
+                  <th>End</th>
+                  <th>Time to Work</th>
+                  <th>Note</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.calculationLogBlocks &&
+                  this.state.calculationLogBlocks.map((item) => (
+                    <tr key={item.start}>
+                      <td>{item.start}</td>
+                      <td>{item.end}</td>
+                      <td>{item.slaUsedTimeInMinutes}</td>
+                      <td>{!item.on ? 'OFF' : (item.dstAffected ? 'DST' : '')}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </Table>
           </Col>
         </Row>
       </Container>
