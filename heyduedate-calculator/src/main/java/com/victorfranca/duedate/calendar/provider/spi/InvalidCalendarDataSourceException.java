@@ -1,5 +1,9 @@
 package com.victorfranca.duedate.calendar.provider.spi;
 
+/**
+ * @author victor.franca
+ *
+ */
 public class InvalidCalendarDataSourceException extends Exception {
 
 	public InvalidCalendarDataSourceException(String message) {

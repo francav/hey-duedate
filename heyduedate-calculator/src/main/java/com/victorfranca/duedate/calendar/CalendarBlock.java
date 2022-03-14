@@ -7,6 +7,10 @@ import com.victorfranca.duedate.calculator.Dates;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author victor.franca
+ *
+ */
 @Getter
 @Setter
 public class CalendarBlock {

@@ -4,6 +4,10 @@ import com.victorfranca.duedate.calendar.provider.spi.CalendarProvider;
 import com.victorfranca.duedate.calendar.provider.spi.DayLightSavingProvider;
 import com.victorfranca.duedate.calendar.provider.spi.NonBusinessDayProvider;
 
+/**
+ * @author victor.franca
+ *
+ */
 public class CalendarBuilder {
 	
 	private CalendarProvider calendarProvider;

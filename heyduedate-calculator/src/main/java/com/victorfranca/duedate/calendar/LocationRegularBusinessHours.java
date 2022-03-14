@@ -4,6 +4,10 @@ import lombok.Builder;
 import lombok.Getter;
 
 //TODO multiple business hours windows by location
+/**
+ * @author victor.franca
+ *
+ */
 @Builder
 @Getter
 public class LocationRegularBusinessHours {

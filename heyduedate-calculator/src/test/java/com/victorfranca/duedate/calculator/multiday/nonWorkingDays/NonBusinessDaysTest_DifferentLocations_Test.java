@@ -14,6 +14,10 @@ import com.victorfranca.duedate.calculator.DueDateCalculator;
 import com.victorfranca.duedate.calendar.Calendar;
 import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;;
 
+/**
+ * @author victor.franca
+ *
+ */
 public class NonBusinessDaysTest_DifferentLocations_Test {
 
 	private Calendar calendar;

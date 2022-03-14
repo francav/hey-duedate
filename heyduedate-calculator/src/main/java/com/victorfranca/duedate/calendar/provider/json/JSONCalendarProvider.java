@@ -17,6 +17,10 @@ import com.victorfranca.duedate.calendar.provider.spi.CalendarDataSourceElementN
 import com.victorfranca.duedate.calendar.provider.spi.CalendarProvider;
 import com.victorfranca.duedate.calendar.provider.spi.InvalidCalendarDataSourceException;
 
+/**
+ * @author victor.franca
+ *
+ */
 public class JSONCalendarProvider implements CalendarProvider {
 
 	private JSONArray regularBusinessHoursDays;

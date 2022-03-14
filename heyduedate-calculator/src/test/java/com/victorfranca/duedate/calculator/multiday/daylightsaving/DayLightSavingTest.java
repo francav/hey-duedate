@@ -14,6 +14,10 @@ import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
 import com.victorfranca.duedate.calendar.daylightsaving.DayLightSavingInfo;
 
 //TODO Mix DST and no-DST in different locations
+/**
+ * @author victor.franca
+ *
+ */
 public class DayLightSavingTest {
 
 	private Calendar calendar;

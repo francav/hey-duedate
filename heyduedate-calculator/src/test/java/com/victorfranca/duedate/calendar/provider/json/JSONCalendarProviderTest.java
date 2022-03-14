@@ -17,6 +17,10 @@ import com.victorfranca.duedate.calendar.provider.spi.CalendarDataSourceElementN
 import com.victorfranca.duedate.calendar.provider.spi.InvalidCalendarDataSourceException;
 
 //TODO given/when/then comments
+/**
+ * @author victor.franca
+ *
+ */
 public class JSONCalendarProviderTest {
 
 	private static final String CALENDAR_ELEMENT = "regularBusinessHours";

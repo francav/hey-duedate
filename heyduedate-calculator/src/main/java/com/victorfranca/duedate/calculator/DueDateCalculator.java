@@ -22,13 +22,16 @@ import com.victorfranca.duedate.calendar.nonbusinesshour.NonBusinessDayVisitor;
  * 
  * SLA always in minutes
  * 
- * @author a688992
  *
  */
 //TODO trim seconds?
 //TODO different time zones
 //TODO Overlaping location times scenarios
 //TODO Thread safe? Concurrency?
+/**
+ * @author victor.franca
+ *
+ */
 public class DueDateCalculator {
 
 	private List<CalendarBlock> calendarBlocks;

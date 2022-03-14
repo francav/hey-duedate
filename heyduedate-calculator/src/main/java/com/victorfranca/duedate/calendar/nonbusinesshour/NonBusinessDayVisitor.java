@@ -11,6 +11,10 @@ import com.victorfranca.duedate.calendar.CalendarBlockVisitor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
+/**
+ * @author victor.franca
+ *
+ */
 @AllArgsConstructor
 @Builder(builderMethodName = "hiddenBuilder")
 public class NonBusinessDayVisitor implements CalendarBlockVisitor {

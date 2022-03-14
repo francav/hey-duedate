@@ -23,6 +23,10 @@ import com.victorfranca.duedate.calendar.provider.spi.CalendarDataSourceElementN
 import com.victorfranca.duedate.calendar.provider.spi.CalendarProvider;
 import com.victorfranca.duedate.calendar.provider.spi.InvalidCalendarDataSourceException;
 
+/**
+ * @author victor.franca
+ *
+ */
 @RestController
 @RequestMapping("/duedate")
 class HeyDueDateCalculatorController {

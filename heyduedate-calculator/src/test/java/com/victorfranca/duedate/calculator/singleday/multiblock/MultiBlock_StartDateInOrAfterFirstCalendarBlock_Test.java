@@ -12,6 +12,10 @@ import com.victorfranca.duedate.calculator.DueDateCalculator;
 import com.victorfranca.duedate.calendar.Calendar;
 import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
 
+/**
+ * @author victor.franca
+ *
+ */
 public class MultiBlock_StartDateInOrAfterFirstCalendarBlock_Test {
 
 	private Calendar calendar;
