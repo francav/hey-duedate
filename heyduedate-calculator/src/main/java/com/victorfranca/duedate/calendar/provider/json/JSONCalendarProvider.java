@@ -4,18 +4,18 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.victorfranca.duedate.calendar.Calendar;
 import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
 import com.victorfranca.duedate.calendar.daylightsaving.DayLightSavingInfo;
-import com.victorfranca.duedate.calendar.provider.spi.CalendarDataSourceElementNotFound;
 import com.victorfranca.duedate.calendar.provider.spi.CalendarProvider;
-import com.victorfranca.duedate.calendar.provider.spi.InvalidCalendarDataSourceException;
+import com.victorfranca.duedate.calendar.provider.spi.exception.CalendarElementNotFound;
+import com.victorfranca.duedate.calendar.provider.spi.exception.InvalidCalendarException;
 
 /**
  * @author victor.franca
@@ -23,9 +23,9 @@ import com.victorfranca.duedate.calendar.provider.spi.InvalidCalendarDataSourceE
  */
 public class JSONCalendarProvider implements CalendarProvider {
 
-	private JSONArray regularBusinessHoursDays;
-	private JSONArray nonBusinessHoursDays;
-	private JSONArray dstInfoList;
+	private List<JSONObject> regularBusinessHoursDays;
+	private List<JSONObject> nonBusinessHoursDays;
+	private List<JSONObject> dstInfoList;
 
 	private static final String REGULAR_BUSINESS_HOURS = "regularBusinessHours";
 	private static final String LOCATION_NODE = "location";
@@ -46,20 +46,20 @@ public class JSONCalendarProvider implements CalendarProvider {
 	private JSONCalendarProvider() {
 	}
 
-	public JSONCalendarProvider(JSONObject calendarDataSource) throws InvalidCalendarDataSourceException {
+	public JSONCalendarProvider(JSONObject calendarDataSource) throws InvalidCalendarException {
 		try {
 			validateCalendarDataSource(calendarDataSource);
-		} catch (InvalidCalendarDataSourceException e) {
+		} catch (InvalidCalendarException e) {
 			throw e;
 		}
 
-		this.regularBusinessHoursDays = (JSONArray) calendarDataSource.get(REGULAR_BUSINESS_HOURS);
-		this.nonBusinessHoursDays = (JSONArray) calendarDataSource.get(NON_BUSINESS_HOURS_DAYS);
-		this.dstInfoList = (JSONArray) calendarDataSource.get(DST_INFO_LIST);
+		this.regularBusinessHoursDays = (List) calendarDataSource.get(REGULAR_BUSINESS_HOURS);
+		this.nonBusinessHoursDays = (List) calendarDataSource.get(NON_BUSINESS_HOURS_DAYS);
+		this.dstInfoList = (List) calendarDataSource.get(DST_INFO_LIST);
 	}
 
 	@Override
-	public Calendar createCalendar() throws CalendarDataSourceElementNotFound, InvalidCalendarDataSourceException {
+	public Calendar createCalendar() throws CalendarElementNotFound, InvalidCalendarException {
 		Calendar calendar = new Calendar();
 
 		addLocationRegularBusinessHours(calendar);
@@ -75,10 +75,10 @@ public class JSONCalendarProvider implements CalendarProvider {
 		return calendar;
 	}
 
-	private void addLocationRegularBusinessHours(Calendar calendar) throws CalendarDataSourceElementNotFound {
+	private void addLocationRegularBusinessHours(Calendar calendar) throws CalendarElementNotFound {
 		for (Object calendarElement : regularBusinessHoursDays) {
 
-			JSONObject calendarElementJSON = (JSONObject) calendarElement;
+			Map<String, Object> calendarElementJSON = ((Map<String, Object>) calendarElement);
 
 			calendar.addLocationRegularBusinessHours(LocationRegularBusinessHours.builder()
 
@@ -92,8 +92,7 @@ public class JSONCalendarProvider implements CalendarProvider {
 		}
 	}
 
-	private void addNonBusinessHoursDays(Calendar calendar)
-			throws CalendarDataSourceElementNotFound, InvalidCalendarDataSourceException {
+	private void addNonBusinessHoursDays(Calendar calendar) throws CalendarElementNotFound, InvalidCalendarException {
 		for (Object nonBusinessDayElement : nonBusinessHoursDays) {
 
 			JSONObject nonBusinessDayElementJSON = (JSONObject) nonBusinessDayElement;
@@ -105,8 +104,7 @@ public class JSONCalendarProvider implements CalendarProvider {
 		}
 	}
 
-	private void addDSTInfo(Calendar calendar)
-			throws CalendarDataSourceElementNotFound, InvalidCalendarDataSourceException {
+	private void addDSTInfo(Calendar calendar) throws CalendarElementNotFound, InvalidCalendarException {
 		for (Object dstInfo : dstInfoList) {
 
 			JSONObject dstElementJSON = (JSONObject) dstInfo;
@@ -123,50 +121,50 @@ public class JSONCalendarProvider implements CalendarProvider {
 
 	}
 
-	private void validateCalendarDataSource(JSONObject calendarDataSource) throws InvalidCalendarDataSourceException {
+	private void validateCalendarDataSource(JSONObject calendarDataSource) throws InvalidCalendarException {
 		if (Objects.isNull(calendarDataSource)) {
-			throw new InvalidCalendarDataSourceException("Null Calendar Data Source");
+			throw new InvalidCalendarException("Null Calendar Data Source");
 		}
 
 		if (Objects.isNull(calendarDataSource.get(REGULAR_BUSINESS_HOURS))
-				|| !(calendarDataSource.get(REGULAR_BUSINESS_HOURS) instanceof JSONArray)) {
-			throw new InvalidCalendarDataSourceException("Calendars element not found in Data Source");
+				|| !(calendarDataSource.get(REGULAR_BUSINESS_HOURS) instanceof List)) {
+			throw new InvalidCalendarException("Calendars element not found in Data Source");
 		}
 
-		// TODO implement JSON calendar data source validation
 	}
 
-	private String getString(String elementName, JSONObject jsonObject) throws CalendarDataSourceElementNotFound {
+	private String getString(String elementName, Map<String, Object> jsonObject) throws CalendarElementNotFound {
 
 		Object jsonElementObject = jsonObject.get(elementName);
 
 		if (jsonElementObject == null) {
-			throw new CalendarDataSourceElementNotFound(elementName);
+			throw new CalendarElementNotFound(elementName);
 		}
 
 		return String.valueOf(jsonElementObject);
 	}
 
-	private int getInt(String elementName, JSONObject jsonObject) throws CalendarDataSourceElementNotFound {
+	private int getInt(String elementName, Map<String, Object> jsonObject) throws CalendarElementNotFound {
 		Object jsonElementObject = jsonObject.get(elementName);
 
 		if (jsonElementObject == null) {
-			throw new CalendarDataSourceElementNotFound(elementName);
+			throw new CalendarElementNotFound(elementName);
 		}
 
 		return Integer.valueOf(String.valueOf(jsonElementObject));
 	}
 
-	private List getList(String elementName, JSONObject jsonObject)
-			throws CalendarDataSourceElementNotFound, InvalidCalendarDataSourceException {
+	private List<String> getList(String elementName, Map<String, Object> jsonObject)
+			throws CalendarElementNotFound, InvalidCalendarException {
+
 		Object jsonElementObject = jsonObject.get(elementName);
 
 		if (jsonElementObject == null) {
-			throw new CalendarDataSourceElementNotFound(elementName);
+			throw new CalendarElementNotFound(elementName);
 		}
 
 		if (!(jsonElementObject instanceof Collection)) {
-			throw new InvalidCalendarDataSourceException("Error while converting element into Array type");
+			throw new InvalidCalendarException("Error while converting element into Array type");
 		}
 
 		Collection<String> jsonElementAsCollection = (Collection) jsonElementObject;

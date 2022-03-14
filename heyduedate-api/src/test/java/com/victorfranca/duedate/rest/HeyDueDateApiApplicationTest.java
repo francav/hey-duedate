@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 //TODO Integration tests
-class SlaCalculatorRestApplicationTests {
+class HeyDueDateApiApplicationTest {
 
 	@Test
 	void contextLoads() {

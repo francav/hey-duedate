@@ -1,4 +1,4 @@
-package com.victorfranca.duedate.rest;
+package com.victorfranca.duedate.api;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
