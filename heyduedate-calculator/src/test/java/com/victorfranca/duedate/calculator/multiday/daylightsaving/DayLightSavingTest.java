@@ -9,9 +9,9 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.victorfranca.duedate.calculator.DueDateCalculator;
+import com.victorfranca.duedate.calculator.daylightsaving.DayLightSavingInfo;
 import com.victorfranca.duedate.calendar.Calendar;
 import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
-import com.victorfranca.duedate.calendar.daylightsaving.DayLightSavingInfo;
 
 //TODO Mix DST and no-DST in different locations
 /**

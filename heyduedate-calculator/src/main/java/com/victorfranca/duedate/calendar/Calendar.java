@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.victorfranca.duedate.calendar.daylightsaving.DayLightSavingInfo;
+import com.victorfranca.duedate.calculator.daylightsaving.DayLightSavingInfo;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -21,7 +21,6 @@ public class CalculationLogTest {
 	private static final String LOCATION_ID_3 = "LOCATION_ID_3";
 
 	@Test
-	// TODO rename it
 	public void shouldKeepCalculationLog_2blocksSla2h() {
 
 		// Given
@@ -71,7 +70,6 @@ public class CalculationLogTest {
 	}
 
 	@Test
-	// TODO rename it
 	public void shouldKeepCalculationLog_3blocksSla1h() {
 
 		// Given

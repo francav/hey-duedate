@@ -3,7 +3,7 @@ package com.victorfranca.duedate.calendar.provider.spi;
 import java.util.List;
 import java.util.Map;
 
-import com.victorfranca.duedate.calendar.daylightsaving.DayLightSavingInfo;
+import com.victorfranca.duedate.calculator.daylightsaving.DayLightSavingInfo;
 
 /**
  * @author victor.franca

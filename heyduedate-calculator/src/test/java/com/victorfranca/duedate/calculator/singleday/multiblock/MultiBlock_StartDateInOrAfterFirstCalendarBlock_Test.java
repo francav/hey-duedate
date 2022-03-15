@@ -34,7 +34,7 @@ public class MultiBlock_StartDateInOrAfterFirstCalendarBlock_Test {
 	private static final int END_HOUR_3 = 23;
 
 	@Before
-	public void inid() {
+	public void init() {
 		// Given
 		calendar = new Calendar();
 		dueDateCalculator = new DueDateCalculator();

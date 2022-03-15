@@ -16,18 +16,18 @@ import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
  * @author victor.franca
  *
  */
-public class MultiBlock_StartDateBeforeFirstCalendarBlock_Test {
+public class MultiBlock_Overlap_Test {
 
 	private Calendar calendar;
 	private DueDateCalculator dueDateCalculator;
 
 	private static final String LOCATION_ID_1 = "LOCATION_ID_1";
-	private static final int START_HOUR_1 = 3;
-	private static final int END_HOUR_1 = 6;
+	private static final int START_HOUR_1 = 0;
+	private static final int END_HOUR_1 = 5;
 
 	private static final String LOCATION_ID_2 = "LOCATION_ID_2";
-	private static final int START_HOUR_2 = 12;
-	private static final int END_HOUR_2 = 18;
+	private static final int START_HOUR_2 = 3;
+	private static final int END_HOUR_2 = 7;
 
 	@Before
 	public void init() {
@@ -45,35 +45,46 @@ public class MultiBlock_StartDateBeforeFirstCalendarBlock_Test {
 	}
 
 	@Test
-	public void calculateDueDateTest_01_00_4h() {
+	public void calculateDueDateTest_00_00_1h() {
 		// When
-		int slaInMinutes = 60 * 4;
-		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 1, 00);
+		int slaInMinutes = 60 * 1;
+		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 00, 00);
 
 		// Then
-		assertEquals(LocalDateTime.of(2022, 1, 1, 13, 00),
+		assertEquals(LocalDateTime.of(2022, 1, 1, 1, 00),
 				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
 	}
 
 	@Test
-	public void calculateDueDateTest_01_01_4h() {
+	public void calculateDueDateTest_00_00_5h() {
 		// When
-		int slaInMinutes = 60 * 4;
-		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 1, 01);
+		int slaInMinutes = 60 * 5;
+		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 00, 00);
 
 		// Then
-		assertEquals(LocalDateTime.of(2022, 1, 1, 13, 00),
+		assertEquals(LocalDateTime.of(2022, 1, 1, 5, 00),
 				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
 	}
 
 	@Test
-	public void calculateDueDateTest_01_59_4h() {
+	public void calculateDueDateTest_00_00_7h() {
 		// When
-		int slaInMinutes = 60 * 4;
-		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 1, 59);
+		int slaInMinutes = 60 * 7;
+		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 00, 00);
 
 		// Then
-		assertEquals(LocalDateTime.of(2022, 1, 1, 13, 00),
+		assertEquals(LocalDateTime.of(2022, 1, 1, 7, 00),
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+	}
+	
+	@Test
+	public void calculateDueDateTest_00_00_8h() {
+		// When
+		int slaInMinutes = 60 * 8;
+		LocalDateTime startDateTime = LocalDateTime.of(2022, 1, 1, 00, 00);
+
+		// Then
+		assertEquals(LocalDateTime.of(2022, 1, 2, 1, 00),
 				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
 	}
 

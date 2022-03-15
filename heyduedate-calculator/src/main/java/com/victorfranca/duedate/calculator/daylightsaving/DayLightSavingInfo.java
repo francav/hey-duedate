@@ -1,4 +1,4 @@
-package com.victorfranca.duedate.calendar.daylightsaving;
+package com.victorfranca.duedate.calculator.daylightsaving;
 
 import java.time.LocalDateTime;
 

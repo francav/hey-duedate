@@ -18,5 +18,6 @@ public class CalculationLogBlock {
 
 	public boolean on;
 	public boolean dstAffected;
+	public String locationId;
 
 }
