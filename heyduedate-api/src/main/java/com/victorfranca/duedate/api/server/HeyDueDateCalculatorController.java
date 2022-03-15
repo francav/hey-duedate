@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.victorfranca.duedate.api.datasource.CalendarDataSource;
 import com.victorfranca.duedate.api.datasource.CalendarDataSourceException;
 import com.victorfranca.duedate.calculator.DueDateCalculator;
+import com.victorfranca.duedate.calculator.log.CalculationLog;
 import com.victorfranca.duedate.calendar.Calendar;
 
 @RestController
@@ -40,6 +41,23 @@ class HeyDueDateCalculatorController {
 		}
 
 		return new DueDateCalculator().calculateDueDate(calendar, startDateTime, slaInMinutes);
+
+	}
+
+	@GetMapping(value = "/{startDateTime}/{slaInMinutes}/log")
+	public CalculationLog getDueDateWithLog(
+			@PathVariable("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
+			@PathVariable("slaInMinutes") Integer slaInMinutes) {
+
+		Calendar calendar = null;
+		try {
+			CalendarDataSource calendarDataSource = beanFactory.getBean(dataSourceType, CalendarDataSource.class);
+			calendar = calendarDataSource.getCalendarData();
+		} catch (CalendarDataSourceException e) {
+			throw new RuntimeException("Internal Error", e);
+		}
+
+		return new DueDateCalculator().calculateDueDateWithLog(calendar, startDateTime, slaInMinutes);
 
 	}
 

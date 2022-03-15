@@ -13,7 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class CalendarBlock {
+public class CalendarBlock implements Cloneable {
 
 	private String locationId;
 
@@ -22,6 +22,8 @@ public class CalendarBlock {
 	private boolean on = true;
 
 	private long durationInMinutes;
+	
+	private boolean dstAffected;
 
 	public CalendarBlock(String locationId, LocalDateTime start, LocalDateTime end) {
 		this.locationId = locationId;
