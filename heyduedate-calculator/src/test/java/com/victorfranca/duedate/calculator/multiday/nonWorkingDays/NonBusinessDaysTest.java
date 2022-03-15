@@ -32,7 +32,7 @@ public class NonBusinessDaysTest {
 	private static final int END_HOUR_2 = 18;
 
 	@Before
-	public void inid() {
+	public void init() {
 		// Given
 		calendar = new Calendar();
 		dueDateCalculator = new DueDateCalculator();

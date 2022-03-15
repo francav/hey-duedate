@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 
 import org.json.simple.JSONObject;
 
+import com.victorfranca.duedate.calculator.daylightsaving.DayLightSavingInfo;
 import com.victorfranca.duedate.calendar.Calendar;
 import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
-import com.victorfranca.duedate.calendar.daylightsaving.DayLightSavingInfo;
 import com.victorfranca.duedate.calendar.provider.spi.CalendarProvider;
 import com.victorfranca.duedate.calendar.provider.spi.exception.CalendarElementNotFound;
 import com.victorfranca.duedate.calendar.provider.spi.exception.InvalidCalendarException;

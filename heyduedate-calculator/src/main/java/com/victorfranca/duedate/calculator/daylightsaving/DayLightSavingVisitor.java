@@ -1,11 +1,11 @@
-package com.victorfranca.duedate.calendar.daylightsaving;
+package com.victorfranca.duedate.calculator.daylightsaving;
 
 import java.util.List;
 import java.util.Map;
 
+import com.victorfranca.duedate.calculator.CalculatorBlock;
+import com.victorfranca.duedate.calculator.CalculatorBlockVisitor;
 import com.victorfranca.duedate.calculator.Dates;
-import com.victorfranca.duedate.calendar.CalendarBlock;
-import com.victorfranca.duedate.calendar.CalendarBlockVisitor;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,7 @@ import lombok.Builder;
  */
 @AllArgsConstructor
 @Builder(builderMethodName = "hiddenBuilder")
-public class DayLightSavingVisitor implements CalendarBlockVisitor {
+public class DayLightSavingVisitor implements CalculatorBlockVisitor {
 
 	private Map<String, List<DayLightSavingInfo>> dayLightSavingInfoByLocation;
 
@@ -26,7 +26,7 @@ public class DayLightSavingVisitor implements CalendarBlockVisitor {
 	}
 
 	@Override
-	public void visit(CalendarBlock calendarBlock) {
+	public void visit(CalculatorBlock calendarBlock) {
 
 		if (dayLightSavingInfoByLocation != null) {
 			if (dayLightSavingInfoByLocation.containsKey(calendarBlock.getLocationId())) {
@@ -45,14 +45,14 @@ public class DayLightSavingVisitor implements CalendarBlockVisitor {
 
 	}
 
-	private void updateStartDateForDST(CalendarBlock calendarBlock, DayLightSavingInfo dayLightSavingInfo) {
+	private void updateStartDateForDST(CalculatorBlock calendarBlock, DayLightSavingInfo dayLightSavingInfo) {
 		if (Dates.isBetween(dayLightSavingInfo.getStart(), dayLightSavingInfo.getEnd(), calendarBlock.getStart())) {
 			calendarBlock.setStart(Dates.addMinutes(1 * dayLightSavingInfo.getOffsetInMinutes(), calendarBlock.getStart()));
 			calendarBlock.setDstAffected(true);
 		}
 	}
 
-	private void updateEndDateForDST(CalendarBlock calendarBlock, DayLightSavingInfo dayLightSavingInfo) {
+	private void updateEndDateForDST(CalculatorBlock calendarBlock, DayLightSavingInfo dayLightSavingInfo) {
 		if (Dates.isBetween(dayLightSavingInfo.getStart(), dayLightSavingInfo.getEnd(), calendarBlock.getEnd())) {
 			calendarBlock.setEnd(Dates.addMinutes(1 * dayLightSavingInfo.getOffsetInMinutes(), calendarBlock.getEnd()));
 			calendarBlock.setDstAffected(true);

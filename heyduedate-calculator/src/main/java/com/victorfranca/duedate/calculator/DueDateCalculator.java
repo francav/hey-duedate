@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.victorfranca.duedate.calculator.daylightsaving.DayLightSavingVisitor;
 import com.victorfranca.duedate.calculator.log.CalculationLog;
 import com.victorfranca.duedate.calculator.log.CalculationLogBlock;
+import com.victorfranca.duedate.calculator.nonbusinesshour.NonBusinessDayVisitor;
+import com.victorfranca.duedate.calculator.overlap.OverlapCalendarMerger;
 import com.victorfranca.duedate.calendar.Calendar;
-import com.victorfranca.duedate.calendar.CalendarBlock;
 import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
-import com.victorfranca.duedate.calendar.daylightsaving.DayLightSavingVisitor;
-import com.victorfranca.duedate.calendar.nonbusinesshour.NonBusinessDayVisitor;
 
 //TODO trim seconds?
 //TODO different time zones
@@ -28,7 +28,9 @@ import com.victorfranca.duedate.calendar.nonbusinesshour.NonBusinessDayVisitor;
  */
 public class DueDateCalculator {
 
-	private List<CalendarBlock> currentDateCalendarBlocks;
+	private List<CalculatorBlock> currentDateCalendarBlocks;
+
+	private List<CalculatorBlock> unmergedCalendarBlocks;
 
 	private long currentDateOnDurationInMinutes;
 
@@ -36,7 +38,10 @@ public class DueDateCalculator {
 
 	private long slaCounterInMinutes = 0;
 
+	private OverlapCalendarMerger overlapCalendarMerger;
+
 	public DueDateCalculator() {
+		this.overlapCalendarMerger = OverlapCalendarMerger.builder().build();
 	}
 
 	public CalculationLog calculateDueDateWithLog(Calendar calendar, LocalDateTime startDateTime, long slaInMinutes) {
@@ -69,7 +74,7 @@ public class DueDateCalculator {
 
 		advanceToDueDateDay(calendar, slaInMinutes, calculationLog);
 
-		CalendarBlock calendarBlock = getDueDateCalendarBlockAndUpdateSLACounter();
+		CalculatorBlock calendarBlock = getDueDateCalendarBlockAndUpdateSLACounter();
 		LocalDateTime dueDateTime = addMinutes(Long.valueOf(slaCounterInMinutes).intValue(), calendarBlock.getEnd());
 
 		return dueDateTime;
@@ -77,9 +82,9 @@ public class DueDateCalculator {
 
 	// TODO refactor: avoid side effect behavior(get block and updating global
 	// variable)
-	private CalendarBlock getDueDateCalendarBlockAndUpdateSLACounter() {
-		Iterator<CalendarBlock> calendarBlockIterator = this.currentDateCalendarBlocks.iterator();
-		CalendarBlock calendarBlock = null;
+	private CalculatorBlock getDueDateCalendarBlockAndUpdateSLACounter() {
+		Iterator<CalculatorBlock> calendarBlockIterator = this.currentDateCalendarBlocks.iterator();
+		CalculatorBlock calendarBlock = null;
 		while (slaCounterInMinutes > 0) {
 			calendarBlock = calendarBlockIterator.next();
 
@@ -113,7 +118,7 @@ public class DueDateCalculator {
 
 	private void initCalendarBlocks(Calendar calendar, LocalDateTime startDateTime, CalculationLog calculationLog) {
 
-		currentDateCalendarBlocks = new ArrayList<>();
+		this.currentDateCalendarBlocks = new ArrayList<>();
 
 		for (LocationRegularBusinessHours locationRegularBusinessHours : calendar.getRegularBusinessHours()) {
 
@@ -123,30 +128,25 @@ public class DueDateCalculator {
 			LocalDateTime end = startDateTime.withHour(locationRegularBusinessHours.getEndHour())
 					.withMinute(locationRegularBusinessHours.getEndMinute()).truncatedTo(ChronoUnit.MINUTES);
 
-			CalendarBlock calendarBlock = new CalendarBlock(locationRegularBusinessHours.getLocation(), start, end);
+			CalculatorBlock calendarBlock = new CalculatorBlock(locationRegularBusinessHours.getLocation(), start, end);
 
-			addCalendarBlock(calendar, calendarBlock, calculationLog);
+			addToCurrentCalendarBlocks(calendar, calendarBlock, calculationLog);
 		}
 
+		unmergedCalendarBlocks = new ArrayList<>(currentDateCalendarBlocks);
+		currentDateCalendarBlocks = overlapCalendarMerger.mergeOverlaps(currentDateCalendarBlocks);
+		
+		buildCalculationLog(calculationLog);
+
+		updateOnDurationInMinutes();
 	}
 
-	private void addCalendarBlock(Calendar calendar, CalendarBlock calendarBlock, CalculationLog calculationLog) {
+	private void addToCurrentCalendarBlocks(Calendar calendar, CalculatorBlock calendarBlock, CalculationLog calculationLog) {
 		this.currentDateCalendarBlocks.add(calendarBlock);
 
 		calendarBlock.accept(DayLightSavingVisitor.builder(calendar.getDayLightSavingInfoByLocation()).build());
 
 		calendarBlock.accept(NonBusinessDayVisitor.builder(calendar.getNonBusinessDaysByLocation()).build());
-
-		if (calendarBlock.isOn()) {
-			currentDateOnDurationInMinutes += calendarBlock.getDurationInMinutes();
-		}
-
-		if (calculationLog != null) {
-			// TODO replace constructor by the calendarBlock parameter
-			calculationLog.add(new CalculationLogBlock(calendarBlock.getStart(), calendarBlock.getEnd(),
-					calendarBlock.getDurationInMinutes(), calendarBlock.isOn(), calendarBlock.isDstAffected()));
-		}
-
 	}
 
 	private long getRollingSlaMinutes(LocalDateTime startDateTime, long slaInMinutes) {
@@ -156,8 +156,8 @@ public class DueDateCalculator {
 	private long getAdaptedOnDurationInMinutes(LocalDateTime startDateTime) {
 		long adaptedOnDurationInMinutes = currentDateOnDurationInMinutes;
 
-		for (Iterator<CalendarBlock> iterator = currentDateCalendarBlocks.iterator(); iterator.hasNext();) {
-			CalendarBlock calendarBlock = (CalendarBlock) iterator.next();
+		for (Iterator<CalculatorBlock> iterator = currentDateCalendarBlocks.iterator(); iterator.hasNext();) {
+			CalculatorBlock calendarBlock = (CalculatorBlock) iterator.next();
 			if (calendarBlock.isOn()) {
 				if (!startDateTime.isBefore(calendarBlock.getStart())) {
 					adaptedOnDurationInMinutes -= diffInMinutes(startDateTime, calendarBlock.getStart())
@@ -176,20 +176,22 @@ public class DueDateCalculator {
 
 	private void incCalendarBlocksDay(Calendar calendar, CalculationLog calculationLog) {
 
-		currentDateCalendarBlocks.forEach(o -> o.nextDay());
+		unmergedCalendarBlocks.forEach(o -> o.nextDay());
 
-		currentDateCalendarBlocks.forEach(
+		unmergedCalendarBlocks.forEach(
 				o -> o.accept(DayLightSavingVisitor.builder(calendar.getDayLightSavingInfoByLocation()).build()));
 
-		currentDateCalendarBlocks
+		unmergedCalendarBlocks
 				.forEach(o -> o.accept(NonBusinessDayVisitor.builder(calendar.getNonBusinessDaysByLocation()).build()));
+		
+		currentDateCalendarBlocks.clear();
+		currentDateCalendarBlocks.addAll(unmergedCalendarBlocks);
+
+		currentDateCalendarBlocks = overlapCalendarMerger.mergeOverlaps(currentDateCalendarBlocks);
 
 		updateOnDurationInMinutes();
 
-		if (calculationLog != null) {
-			currentDateCalendarBlocks.forEach(o -> calculationLog.add(new CalculationLogBlock(o.getStart(), o.getEnd(),
-					o.getDurationInMinutes(), o.isOn(), o.isDstAffected())));
-		}
+		buildCalculationLog(calculationLog);
 
 	}
 
@@ -198,5 +200,13 @@ public class DueDateCalculator {
 		currentDateCalendarBlocks.stream().filter(o -> o.isOn())
 				.forEach(o -> currentDateOnDurationInMinutes += o.getDurationInMinutes());
 	}
+	
+	private void buildCalculationLog(CalculationLog calculationLog) {
+		if (calculationLog != null) {
+			currentDateCalendarBlocks.forEach(o -> calculationLog.add(new CalculationLogBlock(o.getStart(), o.getEnd(),
+					o.getDurationInMinutes(), o.isOn(), o.isDstAffected(), o.getLocationId())));
+		}
+	}
+
 
 }

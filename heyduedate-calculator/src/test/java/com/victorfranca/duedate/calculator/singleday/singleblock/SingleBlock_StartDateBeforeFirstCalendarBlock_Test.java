@@ -27,7 +27,7 @@ public class SingleBlock_StartDateBeforeFirstCalendarBlock_Test {
 	private static final int END_HOUR_1 = 6;
 
 	@Before
-	public void inid() {
+	public void init() {
 		// Given
 		calendar = new Calendar();
 		dueDateCalculator = new DueDateCalculator();

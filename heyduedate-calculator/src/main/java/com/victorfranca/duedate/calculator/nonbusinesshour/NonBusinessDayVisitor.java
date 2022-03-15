@@ -1,12 +1,12 @@
-package com.victorfranca.duedate.calendar.nonbusinesshour;
+package com.victorfranca.duedate.calculator.nonbusinesshour;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import com.victorfranca.duedate.calculator.CalculatorBlock;
+import com.victorfranca.duedate.calculator.CalculatorBlockVisitor;
 import com.victorfranca.duedate.calculator.Dates;
-import com.victorfranca.duedate.calendar.CalendarBlock;
-import com.victorfranca.duedate.calendar.CalendarBlockVisitor;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,7 @@ import lombok.Builder;
  */
 @AllArgsConstructor
 @Builder(builderMethodName = "hiddenBuilder")
-public class NonBusinessDayVisitor implements CalendarBlockVisitor {
+public class NonBusinessDayVisitor implements CalculatorBlockVisitor {
 
 	private Map<String, List<LocalDate>> nonBusinessDaysByLocation;
 
@@ -26,13 +26,13 @@ public class NonBusinessDayVisitor implements CalendarBlockVisitor {
 	}
 
 	@Override
-	public void visit(CalendarBlock calendarBlock) {
+	public void visit(CalculatorBlock calendarBlock) {
 		calendarBlock.setOn(!isNonBusinessHour(calendarBlock));
 	}
 
 	// TODO DST: comparing to calendar block start date may not work since end date
 	// may fall in next day (unit test this)
-	private boolean isNonBusinessHour(CalendarBlock calendarBlock) {
+	private boolean isNonBusinessHour(CalculatorBlock calendarBlock) {
 
 		if (nonBusinessDaysByLocation == null) {
 			return false;

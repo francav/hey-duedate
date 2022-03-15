@@ -55,7 +55,12 @@ class App extends Component {
           calculationLogBlocks: response.data.calculationLogBlocks,
         });
       })
-      .catch((error) => this.setState({ dueDateTime: error.message }));
+      .catch((error) =>
+        this.setState({
+          dueDateTime: error.message,
+          calculationLogBlocks: [],
+        })
+      );
   }
 
   render() {
@@ -111,38 +116,58 @@ class App extends Component {
           </Row>
         </Form>
 
-        <Row className="p-5">
-          <Col>
-            {this.state.dueDateTime}
-            {this.state.errorMessage}
-          </Col>
+        <Row className="p-3">
+          <Col></Col>
         </Row>
 
-        <Row className="p-5">
-          <Col>
-            <Table responsive>
-              <thead>
-                <tr>
-                  <th>Start</th>
-                  <th>End</th>
-                  <th>Time to Work</th>
-                  <th>Note</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.calculationLogBlocks &&
-                  this.state.calculationLogBlocks.map((item) => (
-                    <tr key={item.start}>
-                      <td>{item.start}</td>
-                      <td>{item.end}</td>
-                      <td>{item.slaUsedTimeInMinutes}</td>
-                      <td>{!item.on ? 'OFF' : (item.dstAffected ? 'DST' : '')}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </Table>
-          </Col>
-        </Row>
+        {this.state.dueDateTime ? (
+          <Row className="border">
+            <Col>
+              {this.state.dueDateTime
+                ? "Due to: " + this.state.dueDateTime
+                : ""}
+            </Col>
+          </Row>
+        ) : (
+          ""
+        )}
+
+        {this.state.calculationLogBlocks.length > 0 ? (
+          <Row className="p-5">
+            <Col>
+              <Table responsive>
+                <thead>
+                  <tr>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Time to Work</th>
+                    <th>Note</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.calculationLogBlocks &&
+                    this.state.calculationLogBlocks.map((item) => (
+                      <tr key={item.start}>
+                        <td>{item.start}</td>
+                        <td>{item.end}</td>
+                        <td>{item.slaUsedTimeInMinutes}</td>
+                        <td>
+                          {item.locationId +
+                            (!item.on
+                              ? " (OFF)"
+                              : item.dstAffected
+                              ? " (DST)"
+                              : "")}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </Table>
+            </Col>
+          </Row>
+        ) : (
+          ""
+        )}
       </Container>
     );
   }
