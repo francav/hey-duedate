@@ -28,16 +28,17 @@ class App extends Component {
       calculationLogBlocks: [],
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this)
+    this.handleClick = this.handleClick.bind(this)
   }
 
   handleChange(evt) {
     if (evt instanceof Date) {
-      this.setState({ startDateTime: evt });
+      this.setState({ startDateTime: new Date(evt) })
     } else {
-      this.setState({ [evt.target.name]: evt.target.value });
+      this.setState({ [evt.target.name]: evt.target.value })
     }
+    this.clearForm()
   }
 
   handleClick() {
@@ -51,16 +52,27 @@ class App extends Component {
       )
       .then((response) => {
         this.setState({
-          dueDateTime: new Date(response.data.dueDateTime).toLocaleString(),
+          dueDateTime: response.data.dueDateTime,
           calculationLogBlocks: response.data.calculationLogBlocks,
-        });
+        })
       })
       .catch((error) =>
         this.setState({
           dueDateTime: error.message,
           calculationLogBlocks: [],
         })
-      );
+      )
+  }
+
+  clearForm() {
+    this.setState({
+      dueDateTime: "",
+      calculationLogBlocks: [],
+    })
+  }
+
+  convertTimeZoneLessDateToUTCString(date) {
+    return new Date(date + "Z").toUTCString();
   }
 
   render() {
@@ -110,7 +122,7 @@ class App extends Component {
           </Row>
 
           <Row>
-            <Col className="d-flex flex-column justify-content-center">
+            <Col className="d-flex justify-content-center">
               <Button onClick={this.handleClick}>Hey Due Date!</Button>
             </Col>
           </Row>
@@ -120,12 +132,36 @@ class App extends Component {
           <Col></Col>
         </Row>
 
-        {this.state.dueDateTime ? (
-          <Row className="border">
+        {this.state.startDateTime ? (
+          <Row>
             <Col>
-              {this.state.dueDateTime
-                ? "Due to: " + this.state.dueDateTime
-                : ""}
+              <img src="start.png" height={30} alt="Start from"/>
+              <h3 className="start-date">
+                {this.state.startDateTime
+                  ? new Date(this.state.startDateTime).toUTCString()
+                  : ""}
+              </h3>
+            </Col>
+          </Row>
+        ) : (
+          ""
+        )}
+
+        <Row className="p-3">
+          <Col></Col>
+        </Row>
+
+        {this.state.dueDateTime ? (
+          <Row>
+            <Col>
+              <img src="due-date.png" height={30} alt="due to"/>
+              <h3 className="due-date">
+                {this.state.dueDateTime
+                  ? this.convertTimeZoneLessDateToUTCString(
+                      this.state.dueDateTime
+                    )
+                  : ""}
+              </h3>
             </Col>
           </Row>
         ) : (
@@ -147,9 +183,17 @@ class App extends Component {
                 <tbody>
                   {this.state.calculationLogBlocks &&
                     this.state.calculationLogBlocks.map((item) => (
-                      <tr key={item.start}>
-                        <td>{item.start}</td>
-                        <td>{item.end}</td>
+                      <tr
+                        key={this.convertTimeZoneLessDateToUTCString(
+                          item.locationId
+                        )}
+                      >
+                        <td>
+                          {this.convertTimeZoneLessDateToUTCString(item.start)}
+                        </td>
+                        <td>
+                          {this.convertTimeZoneLessDateToUTCString(item.end)}
+                        </td>
                         <td>{item.slaUsedTimeInMinutes}</td>
                         <td>
                           {item.locationId +
@@ -169,7 +213,7 @@ class App extends Component {
           ""
         )}
       </Container>
-    );
+    )
   }
 }
-export default App;
+export default App
