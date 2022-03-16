@@ -32,3 +32,15 @@ jobs:
       #Run Tests
       - name: Run Tests
         run: mvn -B test
+      #Build the application using Maven
+      - name: Build with Maven
+        run: mvn -B package -DskipTests --file pom.xml        
+      #Upload Jar
+      - name: Upload JAR
+        #This uploads artifacts from your workflow allowing you to share data between jobs and store data once a workflow is complete.
+        uses: actions/upload-artifact@v2
+        with:
+          #Set artifact name
+          name: artifact
+          #From this path
+          path: heyduedate-api/target/heyduedate-api-1.0-SNAPSHOT.jar
