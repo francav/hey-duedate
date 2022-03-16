@@ -21,7 +21,7 @@ import com.victorfranca.duedate.calendar.Calendar;
 @RequestMapping("/duedate")
 class HeyDueDateCalculatorController {
 
-	@Value("${calendar-datasource.type:}")
+	@Value("${calendar-datasource.type}")
 	private String dataSourceType;
 
 	@Autowired

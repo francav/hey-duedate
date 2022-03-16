@@ -29,7 +29,7 @@ public class RestCalendarDataSource implements CalendarDataSource {
 
 	private MultiValueMap<String, String> headers;
 
-	public RestCalendarDataSource(@Value("${calendar-datasource-rest.url:}") String url) {
+	public RestCalendarDataSource(@Value("${calendar-datasource-rest.url}") String url) {
 		this.url = url;
 	}
 
