@@ -1,6 +1,7 @@
 package com.victorfranca.duedate.api.server;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ class HeyDueDateCalculatorController {
 			@PathVariable("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
 			@PathVariable("slaInMinutes") Integer slaInMinutes) {
 
+		startDateTime = startDateTime.truncatedTo(ChronoUnit.MINUTES);
+
 		Calendar calendar = null;
 		try {
 			CalendarDataSource calendarDataSource = beanFactory.getBean(dataSourceType, CalendarDataSource.class);
@@ -48,6 +51,8 @@ class HeyDueDateCalculatorController {
 	public CalculationLog getDueDateWithLog(
 			@PathVariable("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
 			@PathVariable("slaInMinutes") Integer slaInMinutes) {
+		
+		startDateTime = startDateTime.truncatedTo(ChronoUnit.MINUTES);
 
 		Calendar calendar = null;
 		try {
