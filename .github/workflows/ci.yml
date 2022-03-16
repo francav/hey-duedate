@@ -1,94 +1,105 @@
 name: CI/CD Pipeline
 on:
-  #Manually trigger workflow runs
   workflow_dispatch:
-  #Trigger the workflow on push from the main branch
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 jobs:
-  #Test's job
   tests:
     name: Unit tests
-    #Run on Ubuntu using the latest version
     runs-on: ubuntu-latest
-    #Job's steps
     steps:
-      #Check-out your repository under $GITHUB_WORKSPACE, so your workflow can access it
       - uses: actions/checkout@v1
-      #Set up JDK 11
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: '11'
-      #Set up Maven cache
       - name: Cache Maven packages
-        #This action allows caching dependencies and build outputs to improve workflow execution time.
         uses: actions/cache@v1
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      #Run Tests
       - name: Run Tests
         run: mvn -B test
-  #Build's job
   build:
-    #Depends on tests job
     needs: tests
     name: Build
-    #Run on Ubuntu using the latest version
     runs-on: ubuntu-latest
     steps:
-      #Check-out your repository under $GITHUB_WORKSPACE, so your workflow can access it
       - uses: actions/checkout@v1
-      #Set up JDK 11
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: '11'
-      #Set up Maven cache
       - name: Cache Maven packages
-        #This action allows caching dependencies and build outputs to improve workflow execution time.
         uses: actions/cache@v1
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      #Build the application using Maven
       - name: Build with Maven
         run: mvn -B package -DskipTests --file pom.xml
-      #Upload jar
       - name: Upload JAR
-        #This uploads artifacts from your workflow allowing you to share data between jobs and store data once a workflow is complete.
         uses: actions/upload-artifact@v2
         with:
-          #Set artifact name
-          name: artifact
-          #From this path
+          name: heyduedate-api
           path: heyduedate-api/target/heyduedate-api-1.0-SNAPSHOT.jar
-  #Deploy's job
+
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.13.0
+      - name: Install NPM packages
+        run: npm ci
+        working-directory: heyduedate-react
+      - name: Build project
+        run: REACT_APP_API_URL=${{ secrets.API_URL }} npm run build
+        working-directory: heyduedate-react
+      #- name: Run tests
+      #  run: npm run test
+      #  working-directory: heyduedate-react
+      - name: Upload production-ready build files
+        uses: actions/upload-artifact@v2
+        with:
+          name: heyduedate-react
+          path: ./heyduedate-react/build
+
   deploy:
-    #Depends on build's job
     needs: build
     name: Deploy
-    #Run on Ubuntu using the latest version
     runs-on: ubuntu-latest
     steps:
       - name: Download JAR
-        #Download the artifact which was uploaded in the build's job
         uses: actions/download-artifact@v2
         with:
-          name: artifact
-      #Deploy the artifact (JAR) into AWS Beanstalk
-      - name: Deploy to EB
+          name: heyduedate-api
+      - name: Deploy to API Artifact
         uses: einaregilsson/beanstalk-deploy@v13
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          use_existing_version_if_available: false
+          use_existing_version_if_available: true
           application_name: hey-duedate-api
           environment_name: Heyduedateapi-env
           version_label: ${{github.SHA}}
-          region: us-east-1
+          region: ${{ secrets.AWS_REGION }}
           deployment_package: heyduedate-api-1.0-SNAPSHOT.jar
+
+      - name: Download React Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: heyduedate-react
+      - name: Deploy to S3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --delete
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_PRODUCTION_BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          SOURCE_DIR: "."

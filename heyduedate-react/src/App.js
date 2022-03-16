@@ -19,14 +19,15 @@ import "./App.css";
 import axios from "axios";
 
 class App extends Component {
+
   constructor() {
-    super();
+    super()
     this.state = {
       startDateTime: "",
       dueDateTime: "",
       sla: "",
       calculationLogBlocks: [],
-    };
+    }
 
     this.handleChange = this.handleChange.bind(this)
     this.handleClick = this.handleClick.bind(this)
@@ -44,11 +45,11 @@ class App extends Component {
   handleClick() {
     axios
       .get(
-        "http://localhost:8080/duedate/" +
-          this.state.startDateTime.toISOString() +
-          "/" +
-          this.state.sla +
-          "/log"
+        process.env.REACT_APP_API_URL + "/duedate/" +
+        this.state.startDateTime.toISOString() +
+        "/" +
+        this.state.sla +
+        "/log"
       )
       .then((response) => {
         this.setState({
@@ -72,7 +73,7 @@ class App extends Component {
   }
 
   convertTimeZoneLessDateToUTCString(date) {
-    return new Date(date + "Z").toUTCString();
+    return new Date(date + "Z").toUTCString()
   }
 
   render() {
@@ -135,7 +136,7 @@ class App extends Component {
         {this.state.startDateTime ? (
           <Row>
             <Col>
-              <img src="start.png" height={30} alt="Start from"/>
+              <img src="start.png" height={30} alt="Start from" />
               <h3 className="start-date">
                 {this.state.startDateTime
                   ? new Date(this.state.startDateTime).toUTCString()
@@ -154,12 +155,12 @@ class App extends Component {
         {this.state.dueDateTime ? (
           <Row>
             <Col>
-              <img src="due-date.png" height={30} alt="due to"/>
+              <img src="due-date.png" height={30} alt="due to" />
               <h3 className="due-date">
                 {this.state.dueDateTime
                   ? this.convertTimeZoneLessDateToUTCString(
-                      this.state.dueDateTime
-                    )
+                    this.state.dueDateTime
+                  )
                   : ""}
               </h3>
             </Col>
@@ -200,8 +201,8 @@ class App extends Component {
                             (!item.on
                               ? " (OFF)"
                               : item.dstAffected
-                              ? " (DST)"
-                              : "")}
+                                ? " (DST)"
+                                : "")}
                         </td>
                       </tr>
                     ))}
