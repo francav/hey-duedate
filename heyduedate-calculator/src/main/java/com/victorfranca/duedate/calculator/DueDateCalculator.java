@@ -61,8 +61,8 @@ public class DueDateCalculator {
 
 	// TODO exception when sla rolls over calendarDay onDuration
 	// Exception when SLA == ZERO
-	public LocalDateTime calculateDueDate(Calendar calendar, LocalDateTime startDateTime, long slaInMinutes) {
-		return calculateDueDate(calendar, startDateTime, slaInMinutes, null);
+	public CalculationLog calculateDueDate(Calendar calendar, LocalDateTime startDateTime, long slaInMinutes) {
+		return new CalculationLog(calculateDueDate(calendar, startDateTime, slaInMinutes, null));
 	}
 
 	private LocalDateTime calculateDueDate(Calendar calendar, LocalDateTime startDateTime, long slaInMinutes,
@@ -135,13 +135,14 @@ public class DueDateCalculator {
 
 		unmergedCalendarBlocks = new ArrayList<>(currentDateCalendarBlocks);
 		currentDateCalendarBlocks = overlapCalendarMerger.mergeOverlaps(currentDateCalendarBlocks);
-		
+
 		buildCalculationLog(calculationLog);
 
 		updateOnDurationInMinutes();
 	}
 
-	private void addToCurrentCalendarBlocks(Calendar calendar, CalculatorBlock calendarBlock, CalculationLog calculationLog) {
+	private void addToCurrentCalendarBlocks(Calendar calendar, CalculatorBlock calendarBlock,
+			CalculationLog calculationLog) {
 		this.currentDateCalendarBlocks.add(calendarBlock);
 
 		calendarBlock.accept(DayLightSavingVisitor.builder(calendar.getDayLightSavingInfoByLocation()).build());
@@ -183,7 +184,7 @@ public class DueDateCalculator {
 
 		unmergedCalendarBlocks
 				.forEach(o -> o.accept(NonBusinessDayVisitor.builder(calendar.getNonBusinessDaysByLocation()).build()));
-		
+
 		currentDateCalendarBlocks.clear();
 		currentDateCalendarBlocks.addAll(unmergedCalendarBlocks);
 
@@ -200,13 +201,12 @@ public class DueDateCalculator {
 		currentDateCalendarBlocks.stream().filter(o -> o.isOn())
 				.forEach(o -> currentDateOnDurationInMinutes += o.getDurationInMinutes());
 	}
-	
+
 	private void buildCalculationLog(CalculationLog calculationLog) {
 		if (calculationLog != null) {
 			currentDateCalendarBlocks.forEach(o -> calculationLog.add(new CalculationLogBlock(o.getStart(), o.getEnd(),
 					o.getDurationInMinutes(), o.isOn(), o.isDstAffected(), o.getLocationId())));
 		}
 	}
-
 
 }

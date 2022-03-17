@@ -7,16 +7,22 @@ import java.util.List;
 import com.victorfranca.duedate.calculator.Dates;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class CalculationLog {
 
 	private List<CalculationLogBlock> calculationLogBlocks = new ArrayList<CalculationLogBlock>();
 
 	private LocalDateTime startDateTime;
 	private LocalDateTime dueDateTime;
+
+	public CalculationLog(LocalDateTime dueDateTime) {
+		this.dueDateTime = dueDateTime;
+	}
 
 	// TODO improve for performance
 	// TODO maybe a visitor?
