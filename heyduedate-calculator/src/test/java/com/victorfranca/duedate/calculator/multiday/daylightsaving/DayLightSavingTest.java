@@ -37,9 +37,8 @@ public class DayLightSavingTest {
 		LocalDateTime dstEnd = LocalDateTime.of(2022, 1, 2, 2, 0);
 		int dstOffset = 60;
 
-		calendar.setRegularBusinessHours(
-				List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1).startHour(START_HOUR_1)
-						.startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
+		calendar.setRegularBusinessHours(List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1)
+				.startHour(START_HOUR_1).startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
 
 		calendar.setDayLightSavingInfoByLocation(Map.of(LOCATION_ID_1,
 				List.of(DayLightSavingInfo.builder().start(dstStart).end(dstEnd).offsetInMinutes(dstOffset).build())));
@@ -50,7 +49,7 @@ public class DayLightSavingTest {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 06, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	@Test
@@ -63,9 +62,8 @@ public class DayLightSavingTest {
 		LocalDateTime dstEnd = LocalDateTime.of(2022, 1, 2, 2, 0);
 		int dstOffset = 60;
 
-		calendar.setRegularBusinessHours(
-				List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1).startHour(START_HOUR_1)
-						.startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
+		calendar.setRegularBusinessHours(List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1)
+				.startHour(START_HOUR_1).startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
 
 		calendar.setDayLightSavingInfoByLocation(Map.of(LOCATION_ID_1,
 				List.of(DayLightSavingInfo.builder().start(dstStart).end(dstEnd).offsetInMinutes(dstOffset).build())));
@@ -76,7 +74,7 @@ public class DayLightSavingTest {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 06, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	@Test
@@ -89,9 +87,8 @@ public class DayLightSavingTest {
 		LocalDateTime dstEnd = LocalDateTime.of(2022, 1, 2, 2, 0);
 		int dstOffset = 60;
 
-		calendar.setRegularBusinessHours(
-				List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1).startHour(START_HOUR_1)
-						.startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
+		calendar.setRegularBusinessHours(List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1)
+				.startHour(START_HOUR_1).startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
 
 		calendar.setDayLightSavingInfoByLocation(Map.of(LOCATION_ID_1,
 				List.of(DayLightSavingInfo.builder().start(dstStart).end(dstEnd).offsetInMinutes(dstOffset).build())));
@@ -102,7 +99,7 @@ public class DayLightSavingTest {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 06, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	@Test
@@ -115,9 +112,8 @@ public class DayLightSavingTest {
 		LocalDateTime dstEnd = LocalDateTime.of(2022, 1, 1, 8, 0);
 		int dstOffset = 60;
 
-		calendar.setRegularBusinessHours(
-				List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1).startHour(START_HOUR_1)
-						.startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
+		calendar.setRegularBusinessHours(List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1)
+				.startHour(START_HOUR_1).startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
 
 		calendar.setDayLightSavingInfoByLocation(Map.of(LOCATION_ID_1,
 				List.of(DayLightSavingInfo.builder().start(dstStart).end(dstEnd).offsetInMinutes(dstOffset).build())));
@@ -128,7 +124,7 @@ public class DayLightSavingTest {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 06, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	@Test
@@ -141,9 +137,8 @@ public class DayLightSavingTest {
 		LocalDateTime dstEnd = LocalDateTime.of(2022, 1, 1, 2, 0);
 		int dstOffset = 60;
 
-		calendar.setRegularBusinessHours(
-				List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1).startHour(START_HOUR_1)
-						.startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
+		calendar.setRegularBusinessHours(List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1)
+				.startHour(START_HOUR_1).startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
 
 		calendar.setDayLightSavingInfoByLocation(Map.of(LOCATION_ID_1,
 				List.of(DayLightSavingInfo.builder().start(dstStart).end(dstEnd).offsetInMinutes(dstOffset).build())));
@@ -154,7 +149,7 @@ public class DayLightSavingTest {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 05, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	@Test
@@ -167,9 +162,8 @@ public class DayLightSavingTest {
 		LocalDateTime dstEnd = LocalDateTime.of(2022, 1, 1, 4, 0);
 		int dstOffset = 60;
 
-		calendar.setRegularBusinessHours(
-				List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1).startHour(START_HOUR_1)
-						.startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
+		calendar.setRegularBusinessHours(List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1)
+				.startHour(START_HOUR_1).startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
 
 		calendar.setDayLightSavingInfoByLocation(Map.of(LOCATION_ID_1,
 				List.of(DayLightSavingInfo.builder().start(dstStart).end(dstEnd).offsetInMinutes(dstOffset).build())));
@@ -180,7 +174,7 @@ public class DayLightSavingTest {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 05, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 }

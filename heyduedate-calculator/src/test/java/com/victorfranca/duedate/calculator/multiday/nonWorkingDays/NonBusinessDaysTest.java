@@ -61,7 +61,7 @@ public class NonBusinessDaysTest {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 2, 05, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	@Test
@@ -79,7 +79,7 @@ public class NonBusinessDaysTest {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 3, 04, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 }

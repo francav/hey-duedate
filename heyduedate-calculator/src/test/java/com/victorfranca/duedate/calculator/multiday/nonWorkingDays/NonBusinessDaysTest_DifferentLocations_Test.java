@@ -59,7 +59,7 @@ public class NonBusinessDaysTest_DifferentLocations_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 14, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class NonBusinessDaysTest_DifferentLocations_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 2, 4, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	@Test
@@ -91,7 +91,7 @@ public class NonBusinessDaysTest_DifferentLocations_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 2, 13, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 }

@@ -52,7 +52,7 @@ public class MultiBlock_Overlap_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 1, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class MultiBlock_Overlap_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 5, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	@Test
@@ -74,9 +74,9 @@ public class MultiBlock_Overlap_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 7, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
-	
+
 	@Test
 	public void calculateDueDateTest_00_00_8h() {
 		// When
@@ -85,7 +85,7 @@ public class MultiBlock_Overlap_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 2, 1, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 }

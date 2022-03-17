@@ -32,9 +32,8 @@ public class SingleBlock_StartDateBeforeFirstCalendarBlock_Test {
 		calendar = new Calendar();
 		dueDateCalculator = new DueDateCalculator();
 
-		calendar.setRegularBusinessHours(
-				List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1).startHour(START_HOUR_1)
-						.startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
+		calendar.setRegularBusinessHours(List.of(LocationRegularBusinessHours.builder().location(LOCATION_ID_1)
+				.startHour(START_HOUR_1).startMinute(0).endHour(END_HOUR_1).endMinute(0).build()));
 
 	}
 
@@ -46,7 +45,7 @@ public class SingleBlock_StartDateBeforeFirstCalendarBlock_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 4, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 
 	}
 
@@ -58,7 +57,7 @@ public class SingleBlock_StartDateBeforeFirstCalendarBlock_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 4, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 }
