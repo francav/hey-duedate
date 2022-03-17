@@ -45,11 +45,11 @@ class App extends Component {
   handleClick() {
     axios
       .get(
-        process.env.REACT_APP_API_URL + "/duedate/" +
-        this.state.startDateTime.toISOString() +
-        "/" +
+        process.env.REACT_APP_API_URL + "/duedate?" +
+        "start=" + this.state.startDateTime.toISOString() +
+        "&sla=" +
         this.state.sla +
-        "/log"
+        "&log=true"
       )
       .then((response) => {
         this.setState({
