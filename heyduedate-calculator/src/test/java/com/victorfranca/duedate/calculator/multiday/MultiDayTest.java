@@ -55,7 +55,7 @@ public class MultiDayTest {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 2, 04, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	@Test
@@ -66,7 +66,7 @@ public class MultiDayTest {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 2, 04, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	@Test
@@ -77,7 +77,7 @@ public class MultiDayTest {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 3, 18, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 }

@@ -64,7 +64,7 @@ public class MultiBlock_StartDateInOrAfterFirstCalendarBlock_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 13, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class MultiBlock_StartDateInOrAfterFirstCalendarBlock_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 13, 01),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class MultiBlock_StartDateInOrAfterFirstCalendarBlock_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 13, 59),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 	//////////////////////////////////////
@@ -101,7 +101,7 @@ public class MultiBlock_StartDateInOrAfterFirstCalendarBlock_Test {
 
 		// Then
 		assertEquals(LocalDateTime.of(2022, 1, 1, 21, 00),
-				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes));
+				dueDateCalculator.calculateDueDate(calendar, startDateTime, slaInMinutes).getDueDateTime());
 	}
 
 }
