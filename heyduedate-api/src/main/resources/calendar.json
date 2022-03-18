@@ -9,17 +9,17 @@
 		},
 		{
 			"location": "Ireland",
-			"startHour": "6",
+			"startHour": "5",
 			"startMinute": "0",
-			"endHour": "9",
-			"endMinute": "0"
+			"endHour": "17",
+			"endMinute": "30"
 		},
 		{
 			"location": "United States",
-			"startHour": "13",
-			"startMinute": "0",
+			"startHour": "17",
+			"startMinute": "30",
 			"endHour": "23",
-			"endMinute": "30"
+			"endMinute": "00"
 		}
 	],
 	"nonBusinessHoursDays": [
