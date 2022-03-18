@@ -28,6 +28,7 @@ class HeyDueDateCalculatorController {
 
 	@GetMapping(value = "/duedate")
 	public CalculationLog getDueDateWithLog(
+			@RequestParam("calendar") String calendarName,
 			@RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
 			@RequestParam("sla") Integer slaInMinutes, @RequestParam("log") Boolean logEnabled) {
 
@@ -36,7 +37,7 @@ class HeyDueDateCalculatorController {
 		Calendar calendar = null;
 		try {
 			CalendarDataSource calendarDataSource = beanFactory.getBean(dataSourceType, CalendarDataSource.class);
-			calendar = calendarDataSource.getCalendarData();
+			calendar = calendarDataSource.getCalendarData(calendarName);
 		} catch (CalendarDataSourceException e) {
 			throw new RuntimeException("Internal Error", e);
 		}

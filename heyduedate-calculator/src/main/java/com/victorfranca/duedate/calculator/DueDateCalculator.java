@@ -13,7 +13,7 @@ import com.victorfranca.duedate.calculator.daylightsaving.DayLightSavingVisitor;
 import com.victorfranca.duedate.calculator.log.CalculationLog;
 import com.victorfranca.duedate.calculator.log.CalculationLogBlock;
 import com.victorfranca.duedate.calculator.nonbusinesshour.NonBusinessDayVisitor;
-import com.victorfranca.duedate.calculator.overlap.OverlapCalendarMerger;
+import com.victorfranca.duedate.calculator.overlap.OverlapCalendarRule;
 import com.victorfranca.duedate.calendar.Calendar;
 import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
 
@@ -38,10 +38,10 @@ public class DueDateCalculator {
 
 	private long slaCounterInMinutes = 0;
 
-	private OverlapCalendarMerger overlapCalendarMerger;
+	private OverlapCalendarRule overlapCalendarRule;
 
 	public DueDateCalculator() {
-		this.overlapCalendarMerger = OverlapCalendarMerger.builder().build();
+		this.overlapCalendarRule = OverlapCalendarRule.builder().build();
 	}
 
 	public CalculationLog calculateDueDateWithLog(Calendar calendar, LocalDateTime startDateTime, long slaInMinutes) {
@@ -122,19 +122,24 @@ public class DueDateCalculator {
 
 		for (LocationRegularBusinessHours locationRegularBusinessHours : calendar.getRegularBusinessHours()) {
 
-			LocalDateTime start = startDateTime.withHour(locationRegularBusinessHours.getStartHour())
-					.withMinute(locationRegularBusinessHours.getStartMinute()).truncatedTo(ChronoUnit.MINUTES);
+			LocalDateTime start = startDateTime
+					.withHour(locationRegularBusinessHours.getStartHour(startDateTime.toLocalDate()))
+					.withMinute(locationRegularBusinessHours.getStartMinute(startDateTime.toLocalDate()))
+					.truncatedTo(ChronoUnit.MINUTES);
 
-			LocalDateTime end = startDateTime.withHour(locationRegularBusinessHours.getEndHour())
-					.withMinute(locationRegularBusinessHours.getEndMinute()).truncatedTo(ChronoUnit.MINUTES);
+			LocalDateTime end = startDateTime
+					.withHour(locationRegularBusinessHours.getEndHour(startDateTime.toLocalDate()))
+					.withMinute(locationRegularBusinessHours.getEndMinute(startDateTime.toLocalDate()))
+					.truncatedTo(ChronoUnit.MINUTES);
 
-			CalculatorBlock calendarBlock = new CalculatorBlock(locationRegularBusinessHours.getLocation(), start, end);
+			CalculatorBlock calendarBlock = new CalculatorBlock(
+					locationRegularBusinessHours.getLocation(startDateTime.toLocalDate()), start, end);
 
 			addToCurrentCalendarBlocks(calendar, calendarBlock, calculationLog);
 		}
 
 		unmergedCalendarBlocks = new ArrayList<>(currentDateCalendarBlocks);
-		currentDateCalendarBlocks = overlapCalendarMerger.mergeOverlaps(currentDateCalendarBlocks);
+		currentDateCalendarBlocks = overlapCalendarRule.applyTo(currentDateCalendarBlocks);
 
 		buildCalculationLog(calculationLog);
 
@@ -188,7 +193,7 @@ public class DueDateCalculator {
 		currentDateCalendarBlocks.clear();
 		currentDateCalendarBlocks.addAll(unmergedCalendarBlocks);
 
-		currentDateCalendarBlocks = overlapCalendarMerger.mergeOverlaps(currentDateCalendarBlocks);
+		currentDateCalendarBlocks = overlapCalendarRule.applyTo(currentDateCalendarBlocks);
 
 		updateOnDurationInMinutes();
 
