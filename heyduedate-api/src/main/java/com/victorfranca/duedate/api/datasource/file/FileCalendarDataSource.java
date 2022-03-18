@@ -1,6 +1,5 @@
 package com.victorfranca.duedate.api.datasource.file;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,7 +12,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.stereotype.Component;
 
 import com.victorfranca.duedate.api.datasource.CalendarDataSource;
@@ -55,8 +56,9 @@ public class FileCalendarDataSource implements CalendarDataSource {
 	@Override
 	public List<String> getCalendars() throws CalendarDataSourceException {
 		try {
-			File[] calendarsFiles = resourceLoader.getResource("classpath:" + resourceFolderName).getFile().listFiles();
-			return Arrays.asList(calendarsFiles).stream().map(o -> o.getName().replaceAll(JSON_EXTENSION, ""))
+			Resource[] calendarsFiles = ResourcePatternUtils.getResourcePatternResolver(resourceLoader)
+					.getResources("classpath:" + resourceFolderName + "*" + JSON_EXTENSION);
+			return Arrays.asList(calendarsFiles).stream().map(o -> o.getFilename().replaceAll(JSON_EXTENSION, ""))
 					.collect(Collectors.toList());
 
 		} catch (IOException e) {
