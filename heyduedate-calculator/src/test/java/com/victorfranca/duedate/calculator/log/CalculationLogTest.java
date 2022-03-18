@@ -49,7 +49,7 @@ public class CalculationLogTest {
 				slaInMinutes);
 
 		// Then
-		assertEquals(LocalDateTime.of(2022, 1, 2, 04, 00), calculationLog.getDueDateTime());
+		assertEquals(LocalDateTime.of(2022, 1, 2, 04, 10), calculationLog.getDueDateTime());
 
 		assertEquals(LocalDateTime.of(2022, 1, 1, 03, 00), calculationLog.get(0).getStart());
 		assertEquals(LocalDateTime.of(2022, 1, 1, 06, 00), calculationLog.get(0).getEnd());
