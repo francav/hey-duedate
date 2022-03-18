@@ -3,14 +3,17 @@ package com.victorfranca.duedate.calendar.provider.json;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.victorfranca.duedate.calculator.daylightsaving.DayLightSavingInfo;
+import com.victorfranca.duedate.calculator.partialbusinesshours.PartialBusinessHour;
 import com.victorfranca.duedate.calendar.Calendar;
 import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
 import com.victorfranca.duedate.calendar.provider.spi.CalendarProvider;
@@ -33,6 +36,13 @@ public class JSONCalendarProvider implements CalendarProvider {
 	private static final String LOCATION_START_MINUTE = "startMinute";
 	private static final String LOCATION_END_HOUR = "endHour";
 	private static final String LOCATION_END_MINUTE = "endMinute";
+
+	private static final String PARTIAL_BUSINESS_HOURS_DAYS_ELEMENT = "partialBusinessHours";
+	private static final String PARTIAL_BUSINESS_HOURS_DAYS_DATE_ELEMENT = "date";
+	private static final String PARTIAL_BUSINESS_HOURS_DAYS_START_HOUR_ELEMENT = "startHour";
+	private static final String PARTIAL_BUSINESS_HOURS_DAYS_START_MINUTE_ELEMENT = "startMinute";
+	private static final String PARTIAL_BUSINESS_HOURS_DAYS_END_HOUR_ELEMENT = "endHour";
+	private static final String PARTIAL_BUSINESS_HOURS_DAYS_END_MINUTE_ELEMENT = "endMinute";
 
 	private static final String NON_BUSINESS_HOURS_DAYS = "nonBusinessHoursDays";
 	private static final String NON_BUSINESS_DAYS = "value";
@@ -87,9 +97,35 @@ public class JSONCalendarProvider implements CalendarProvider {
 					.startMinute(getInt(LOCATION_START_MINUTE, calendarElementJSON))
 					.endHour(getInt(LOCATION_END_HOUR, calendarElementJSON))
 					.endMinute(getInt(LOCATION_END_MINUTE, calendarElementJSON))
-
+					.partialBusinessHoursMap(getPartialBusinessHours(
+							(JSONArray) calendarElementJSON.get(PARTIAL_BUSINESS_HOURS_DAYS_ELEMENT)))
 					.build());
 		}
+	}
+
+	private Map<LocalDate, PartialBusinessHour> getPartialBusinessHours(JSONArray jsonArray)
+			throws CalendarElementNotFound {
+
+		if (jsonArray == null)
+			return null;
+
+		Map<LocalDate, PartialBusinessHour> partialBusinessHours = new LinkedHashMap<>();
+
+		for (Object partialBusinessHourElement : jsonArray) {
+
+			JSONObject partialBusonessHourJSON = (JSONObject) partialBusinessHourElement;
+			PartialBusinessHour partialBusinessHour = PartialBusinessHour.builder()
+					.startHour(getInt(PARTIAL_BUSINESS_HOURS_DAYS_START_HOUR_ELEMENT, partialBusonessHourJSON))
+					.startMinute(getInt(PARTIAL_BUSINESS_HOURS_DAYS_START_MINUTE_ELEMENT, partialBusonessHourJSON))
+					.endHour(getInt(PARTIAL_BUSINESS_HOURS_DAYS_END_HOUR_ELEMENT, partialBusonessHourJSON))
+					.endMinute(getInt(PARTIAL_BUSINESS_HOURS_DAYS_END_MINUTE_ELEMENT, partialBusonessHourJSON)).build();
+
+			partialBusinessHours.put(
+					LocalDate.parse(getString(PARTIAL_BUSINESS_HOURS_DAYS_DATE_ELEMENT, partialBusonessHourJSON)),
+					partialBusinessHour);
+		}
+
+		return partialBusinessHours;
 	}
 
 	private void addNonBusinessHoursDays(Calendar calendar) throws CalendarElementNotFound, InvalidCalendarException {

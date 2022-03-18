@@ -12,7 +12,16 @@
 			"startHour": "5",
 			"startMinute": "0",
 			"endHour": "17",
-			"endMinute": "30"
+			"endMinute": "30",
+			"partialBusinessHours": [
+				{
+					"date": "2021-01-01",
+					"startHour": "8",
+					"startMinute": "30",
+					"endHour": "12",
+					"endMinute": "45"
+				}
+			]
 		},
 		{
 			"location": "United States",

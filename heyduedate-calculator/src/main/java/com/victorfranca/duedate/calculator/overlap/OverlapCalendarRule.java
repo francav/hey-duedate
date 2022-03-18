@@ -11,9 +11,9 @@ import com.victorfranca.duedate.calculator.CalculatorBlock;
 import lombok.Builder;
 
 @Builder
-public class OverlapCalendarMerger {
+public class OverlapCalendarRule {
 
-	public List<CalculatorBlock> mergeOverlaps(List<CalculatorBlock> blocks) {
+	public List<CalculatorBlock> applyTo(List<CalculatorBlock> blocks) {
 
 		List<CalculatorBlock> mergedBlocks = new ArrayList<>(blocks);
 

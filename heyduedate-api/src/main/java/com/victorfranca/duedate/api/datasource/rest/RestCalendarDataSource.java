@@ -51,10 +51,6 @@ public class RestCalendarDataSource implements CalendarDataSource {
 		RestTemplate restTemplate = new RestTemplate(factory);
 		restTemplate.setInterceptors(Collections.singletonList(new RequestResponseLoggingInterceptor()));
 
-		// TODO replace it
-		headers.add("x-iac-app-name", "olympus_prod");
-		// TODO replace it
-		headers.add("x-fid-tenant", "ten-zbvvcefga5");
 		return restTemplate.exchange(resourceUrl, HttpMethod.GET, new HttpEntity<Object>(headers), JSONObject.class);
 	}
 

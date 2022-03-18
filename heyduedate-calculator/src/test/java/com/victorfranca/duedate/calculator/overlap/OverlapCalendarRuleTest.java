@@ -9,12 +9,12 @@ import org.junit.Test;
 
 import com.victorfranca.duedate.calculator.CalculatorBlock;
 
-public class OverlapCalendarMergerTest {
+public class OverlapCalendarRuleTest {
 
 	@Test
-	public void overlapMergeTest() {
+	public void applyToTest() {
 
-		OverlapCalendarMerger overlapCalendarMerger = OverlapCalendarMerger.builder().build();
+		OverlapCalendarRule overlapCalendarMerger = OverlapCalendarRule.builder().build();
 
 		CalculatorBlock calculatorBlock1 = new CalculatorBlock("location1", LocalDateTime.of(2022, 1, 1, 0, 0),
 				LocalDateTime.of(2022, 1, 1, 5, 0));
@@ -24,7 +24,7 @@ public class OverlapCalendarMergerTest {
 
 		List<CalculatorBlock> calculatorBlocks = List.of(calculatorBlock1, calculatorBlock2);
 
-		List<CalculatorBlock> mergedBlocks = overlapCalendarMerger.mergeOverlaps(calculatorBlocks);
+		List<CalculatorBlock> mergedBlocks = overlapCalendarMerger.applyTo(calculatorBlocks);
 
 		assertEquals(LocalDateTime.of(2022, 1, 1, 0, 0), mergedBlocks.get(0).getStart());
 		assertEquals(LocalDateTime.of(2022, 1, 1, 3, 0), mergedBlocks.get(0).getEnd());
