@@ -1,6 +1,7 @@
 package com.victorfranca.duedate.api.datasource.rest;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +35,8 @@ public class RestCalendarDataSource implements CalendarDataSource {
 	}
 
 	@Override
-	public Calendar getCalendarData() throws CalendarDataSourceException {
+	// TODO include calendar in the request URL
+	public Calendar getCalendarData(String calendar) throws CalendarDataSourceException {
 		initHttpHeaderMap();
 
 		try {
@@ -64,6 +66,12 @@ public class RestCalendarDataSource implements CalendarDataSource {
 		this.headers.add("Content-Type", "application/json");
 		this.headers.add("Accept", "application/json");
 
+	}
+
+	@Override
+	public List<String> getCalendars() throws CalendarDataSourceException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

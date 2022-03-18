@@ -1,28 +1,29 @@
-import React, { Component } from "react";
+import React, { Component } from "react"
 
-import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.min.css"
 
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container"
+import Row from "react-bootstrap/Row"
+import Col from "react-bootstrap/Col"
 
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form"
+import Button from "react-bootstrap/Button"
 
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 
-import Table from "react-bootstrap/Table";
+import Table from "react-bootstrap/Table"
 
-import "./App.css";
+import "./App.css"
 
-import axios from "axios";
+import axios from "axios"
 
 class App extends Component {
-
   constructor() {
     super()
     this.state = {
+      calendars: [],
+      calendar: "",
       startDateTime: "",
       dueDateTime: "",
       sla: "",
@@ -31,6 +32,15 @@ class App extends Component {
 
     this.handleChange = this.handleChange.bind(this)
     this.handleClick = this.handleClick.bind(this)
+  }
+
+  componentDidMount() {
+    axios.get(process.env.REACT_APP_API_URL + "/calendar").then((response) => {
+      this.setState({
+        calendars: response.data,
+        calendar: response.data.length > 1 ? response.data[0] : null
+      })
+    })
   }
 
   handleChange(evt) {
@@ -45,11 +55,15 @@ class App extends Component {
   handleClick() {
     axios
       .get(
-        process.env.REACT_APP_API_URL + "/duedate?" +
-        "start=" + this.state.startDateTime.toISOString() +
-        "&sla=" +
-        this.state.sla +
-        "&log=true"
+        process.env.REACT_APP_API_URL +
+          "/duedate?" +
+          "calendar=" +
+          this.state.calendar +
+          "&start=" +
+          this.state.startDateTime.toISOString() +
+          "&sla=" +
+          this.state.sla +
+          "&log=true"
       )
       .then((response) => {
         this.setState({
@@ -80,6 +94,30 @@ class App extends Component {
     return (
       <Container className="d-flex flex-column justify-content-center align-items-center">
         <Form className="p-5 border w-50">
+          <Row>
+            <Col>
+              <Form.Label>Calendar</Form.Label>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Select
+                name="calendar"
+                value={this.state.calendar}
+                onChange={this.handleChange}
+                className="form-control"
+              >
+                {this.state.calendars.map((opt) => (
+                  <option value={opt}>{opt}</option>
+                ))}
+              </Form.Select>
+            </Col>
+          </Row>
+
+          <Row className="p-3">
+            <Col></Col>
+          </Row>
+
           <Row>
             <Col>
               <Form.Label>Start Date/Time</Form.Label>
@@ -159,8 +197,8 @@ class App extends Component {
               <h3 className="due-date">
                 {this.state.dueDateTime
                   ? this.convertTimeZoneLessDateToUTCString(
-                    this.state.dueDateTime
-                  )
+                      this.state.dueDateTime
+                    )
                   : ""}
               </h3>
             </Col>
@@ -201,8 +239,8 @@ class App extends Component {
                             (!item.on
                               ? " (OFF)"
                               : item.dstAffected
-                                ? " (DST)"
-                                : "")}
+                              ? " (DST)"
+                              : "")}
                         </td>
                       </tr>
                     ))}

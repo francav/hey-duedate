@@ -2,7 +2,7 @@
 	"regularBusinessHours": [
 		{
 			"location": "Hong Kong",
-			"startHour": "1",
+			"startHour": "0",
 			"startMinute": "0",
 			"endHour": "5",
 			"endMinute": "0"
@@ -11,24 +11,15 @@
 			"location": "Ireland",
 			"startHour": "5",
 			"startMinute": "0",
-			"endHour": "17",
-			"endMinute": "30",
-			"partialBusinessHours": [
-				{
-					"date": "2021-01-01",
-					"startHour": "8",
-					"startMinute": "30",
-					"endHour": "12",
-					"endMinute": "45"
-				}
-			]
+			"endHour": "21",
+			"endMinute": "0"
 		},
 		{
 			"location": "United States",
-			"startHour": "17",
+			"startHour": "13",
 			"startMinute": "30",
 			"endHour": "23",
-			"endMinute": "00"
+			"endMinute": "30"
 		}
 	],
 	"nonBusinessHoursDays": [
