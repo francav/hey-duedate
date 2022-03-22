@@ -50,7 +50,7 @@ public class DayLightSavingVisitor implements CalculatorBlockVisitor {
 						.get(calendarBlock.getLocationId());
 
 				for (DayLightSavingInfo dayLightSavingInfo : dayLightSavingInfoList) {
-					
+
 					updateStartDateForDST(calendarBlock, dayLightSavingInfo);
 
 					updateEndDateForDST(calendarBlock, dayLightSavingInfo);
@@ -62,8 +62,11 @@ public class DayLightSavingVisitor implements CalculatorBlockVisitor {
 
 	private void updateStartDateForDST(CalculatorBlock calendarBlock, DayLightSavingInfo dayLightSavingInfo) {
 		if (Dates.isBetween(dayLightSavingInfo.getStart(), dayLightSavingInfo.getEnd(), calendarBlock.getStart())) {
-			calendarBlock.setStart(Dates.addMinutes(1 * dayLightSavingInfo.getOffsetInMinutes(), calendarBlock.getStart()));
+			calendarBlock
+					.setStart(Dates.addMinutes(1 * dayLightSavingInfo.getOffsetInMinutes(), calendarBlock.getStart()));
 			calendarBlock.setDstAffected(true);
+		} else {
+			calendarBlock.setDstAffected(false);
 		}
 	}
 
@@ -71,6 +74,8 @@ public class DayLightSavingVisitor implements CalculatorBlockVisitor {
 		if (Dates.isBetween(dayLightSavingInfo.getStart(), dayLightSavingInfo.getEnd(), calendarBlock.getEnd())) {
 			calendarBlock.setEnd(Dates.addMinutes(1 * dayLightSavingInfo.getOffsetInMinutes(), calendarBlock.getEnd()));
 			calendarBlock.setDstAffected(true);
+		} else {
+			calendarBlock.setDstAffected(false);
 		}
 	}
 

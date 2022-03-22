@@ -223,9 +223,7 @@ class App extends Component {
                   {this.state.calculationLogBlocks &&
                     this.state.calculationLogBlocks.map((item) => (
                       <tr
-                        key={this.convertTimeZoneLessDateToUTCString(
-                          item.locationId
-                        )}
+                        key={item.start}
                       >
                         <td>
                           {this.convertTimeZoneLessDateToUTCString(item.start)}
