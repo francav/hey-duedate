@@ -15,7 +15,21 @@ Live demo: http://hey-duedate-react.s3-website-us-east-1.amazonaws.com/
 ![image](https://user-images.githubusercontent.com/85225281/160589038-5d4de16a-24d2-4601-a945-ac3977a26af6.png)
 
 ## What does it do?
-TBD
+1. It reads any business calendars structure data
+
+![Picture2](https://user-images.githubusercontent.com/85225281/160638768-3bcb76b5-6157-4d69-bb43-6c0223e24a5a.png)
+
+2. It takes Start Date/Time and SLA and generates the Due Date
+
+![image](https://user-images.githubusercontent.com/85225281/160638898-4bcd6ba7-80e9-4e2f-be88-c68f2843fd81.png)
+
+## What scenarios are covered?
+
+![Picture3](https://user-images.githubusercontent.com/85225281/160639287-ac154b02-bf80-44fb-a74a-eb4e13fa8355.png)
+
+## Why is it reliable?
+
+![Picture4](https://user-images.githubusercontent.com/85225281/160639562-99c8206f-e137-448b-b001-46dbff61140a.png)
 
 ## How do I set it up?
 TBD
