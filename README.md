@@ -15,11 +15,16 @@ Live demo: http://hey-duedate-react.s3-website-us-east-1.amazonaws.com/
 ![image](https://user-images.githubusercontent.com/85225281/160589038-5d4de16a-24d2-4601-a945-ac3977a26af6.png)
 
 ## What does it do?
+TBD
 
 ## How do I set it up?
+TBD
 
 ## Custom Calendar's data providers
+TBD
 
 ### Calendar's files data providers
+TBD
 
 ### Calendar's REST data providers
+TBD
