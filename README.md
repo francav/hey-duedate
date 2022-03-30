@@ -42,3 +42,12 @@ TBD
 
 ### Calendar's REST data providers
 TBD
+
+## API
+
+### Endpoints
+TBD
+
+### Viewer
+TBD
+
