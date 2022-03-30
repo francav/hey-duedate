@@ -40,6 +40,8 @@ public class CalculatorBlock {
 	private long durationInMinutes;
 
 	private boolean dstAffected;
+	
+	private long slaCounterInMinutes = 0;
 
 	public CalculatorBlock(String locationId, LocalDateTime start, LocalDateTime end) {
 		this.locationId = locationId;

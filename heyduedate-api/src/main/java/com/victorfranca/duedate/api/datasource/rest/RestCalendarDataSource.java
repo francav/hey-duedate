@@ -41,6 +41,8 @@ import com.victorfranca.duedate.calendar.provider.spi.exception.InvalidCalendarE
 @Component("restCalendarDS")
 public class RestCalendarDataSource implements CalendarDataSource {
 
+	// TODO adapt to noums and verbs REST structure
+
 	private String url;
 
 	private MultiValueMap<String, String> headers;
@@ -50,7 +52,6 @@ public class RestCalendarDataSource implements CalendarDataSource {
 	}
 
 	@Override
-	// TODO include calendar in the request URL
 	public Calendar getCalendarData(String calendar) throws CalendarDataSourceException {
 		initHttpHeaderMap();
 
@@ -85,7 +86,7 @@ public class RestCalendarDataSource implements CalendarDataSource {
 
 	@Override
 	public List<String> getCalendars() throws CalendarDataSourceException {
-		// TODO Auto-generated method stub
+		// TODO implement REST calendars list verb
 		return null;
 	}
 

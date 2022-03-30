@@ -23,7 +23,6 @@ import org.springframework.boot.test.context.SpringBootTest;
  *
  */
 @SpringBootTest
-//TODO Integration tests
 class HeyDueDateApiApplicationTest {
 
 	@Test

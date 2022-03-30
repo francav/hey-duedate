@@ -49,7 +49,7 @@ public class FileCalendarDataSource implements CalendarDataSource {
 
 	@Autowired
 	private ResourceLoader resourceLoader;
-
+	
 	public Calendar getCalendarData(String calendarFileName) throws CalendarDataSourceException {
 		JSONParser jsonParser = new JSONParser();
 
@@ -59,7 +59,7 @@ public class FileCalendarDataSource implements CalendarDataSource {
 					.getResource("classpath:" + resourceFolderName + calendarFileName + JSON_EXTENSION)
 					.getInputStream();
 
-			// TODO replace new JSONCalendarProvider ?
+			// TODO replace constructor invokation JSONCalendarProvider ?
 			return new JSONCalendarProvider((JSONObject) jsonParser.parse(new InputStreamReader(resourceInputStream)))
 					.createCalendar();
 		} catch (IOException | ParseException | CalendarElementNotFound | InvalidCalendarException e) {

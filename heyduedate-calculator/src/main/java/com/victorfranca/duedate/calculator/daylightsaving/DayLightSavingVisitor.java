@@ -30,15 +30,10 @@ import lombok.Builder;
  *
  */
 @AllArgsConstructor
-@Builder(builderMethodName = "hiddenBuilder")
+@Builder
 public class DayLightSavingVisitor implements CalculatorBlockVisitor {
 
 	private Map<String, List<DayLightSavingInfo>> dayLightSavingInfoByLocation;
-
-	public static DayLightSavingVisitorBuilder builder(
-			Map<String, List<DayLightSavingInfo>> dayLightSavingInfoByLocation) {
-		return hiddenBuilder().dayLightSavingInfoByLocation(dayLightSavingInfoByLocation);
-	}
 
 	@Override
 	public void visit(CalculatorBlock calendarBlock) {

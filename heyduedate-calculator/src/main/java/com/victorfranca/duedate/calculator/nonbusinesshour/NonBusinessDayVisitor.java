@@ -31,22 +31,20 @@ import lombok.Builder;
  *
  */
 @AllArgsConstructor
-@Builder(builderMethodName = "hiddenBuilder")
+@Builder
 public class NonBusinessDayVisitor implements CalculatorBlockVisitor {
 
 	private Map<String, List<LocalDate>> nonBusinessDaysByLocation;
-
-	public static NonBusinessDayVisitorBuilder builder(Map<String, List<LocalDate>> nonBusinessDaysByLocation) {
-		return hiddenBuilder().nonBusinessDaysByLocation(nonBusinessDaysByLocation);
-	}
 
 	@Override
 	public void visit(CalculatorBlock calendarBlock) {
 		calendarBlock.setOn(!isNonBusinessHour(calendarBlock));
 	}
 
-	// TODO DST: comparing to calendar block start date may not work since end date
-	// may fall in next day (unit test this)
+	/*
+	 * TODO: See https://github.com/francav/hey-duedate/issues/50 - DST scenario
+	 * where daily block end time is following day
+	 */
 	private boolean isNonBusinessHour(CalculatorBlock calendarBlock) {
 
 		if (nonBusinessDaysByLocation == null) {
