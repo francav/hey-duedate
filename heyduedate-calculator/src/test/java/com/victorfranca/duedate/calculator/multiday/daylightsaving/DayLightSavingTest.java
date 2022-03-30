@@ -29,7 +29,6 @@ import com.victorfranca.duedate.calculator.log.CalculationLog;
 import com.victorfranca.duedate.calendar.Calendar;
 import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
 
-//TODO Mix DST and no-DST in different locations
 /**
  * @author victor.franca
  *

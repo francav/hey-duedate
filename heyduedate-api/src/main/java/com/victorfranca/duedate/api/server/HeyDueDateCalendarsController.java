@@ -28,6 +28,8 @@ import com.victorfranca.duedate.api.datasource.CalendarDataSourceException;
 
 @RestController
 class HeyDueDateCalendarsController {
+	
+	// TODO adapt to noums and verbs REST structure
 
 	@Value("${calendar-datasource.type}")
 	private String dataSourceType;

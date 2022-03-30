@@ -35,12 +35,14 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get(process.env.REACT_APP_API_URL + "/calendar").then((response) => {
-      this.setState({
-        calendars: response.data,
-        calendar: response.data.length > 1 ? response.data[0] : null
+    if (process.env.REACT_APP_API_URL) {
+      axios.get(process.env.REACT_APP_API_URL + "/calendar").then((response) => {
+        this.setState({
+          calendars: response.data,
+          calendar: response.data.length > 1 ? response.data[0] : null
+        })
       })
-    })
+    }
   }
 
   handleChange(evt) {
@@ -56,14 +58,14 @@ class App extends Component {
     axios
       .get(
         process.env.REACT_APP_API_URL +
-          "/duedate?" +
-          "calendar=" +
-          this.state.calendar +
-          "&start=" +
-          this.state.startDateTime.toISOString() +
-          "&sla=" +
-          this.state.sla +
-          "&log=true"
+        "/duedate?" +
+        "calendar=" +
+        this.state.calendar +
+        "&start=" +
+        this.state.startDateTime.toISOString() +
+        "&sla=" +
+        this.state.sla +
+        "&log=true"
       )
       .then((response) => {
         this.setState({
@@ -91,7 +93,7 @@ class App extends Component {
   }
 
   render() {
-    return (
+    return process.env.REACT_APP_API_URL ? (
       <Container className="d-flex flex-column justify-content-center align-items-center">
         <Form className="p-5 border w-50">
           <Row>
@@ -197,8 +199,8 @@ class App extends Component {
               <h3 className="due-date">
                 {this.state.dueDateTime
                   ? this.convertTimeZoneLessDateToUTCString(
-                      this.state.dueDateTime
-                    )
+                    this.state.dueDateTime
+                  )
                   : ""}
               </h3>
             </Col>
@@ -237,8 +239,8 @@ class App extends Component {
                             (!item.on
                               ? " (OFF)"
                               : item.dstAffected
-                              ? " (DST)"
-                              : "")}
+                                ? " (DST)"
+                                : "")}
                         </td>
                       </tr>
                     ))}
@@ -251,6 +253,11 @@ class App extends Component {
         )}
       </Container>
     )
+      : (
+        <Container className="d-flex flex-column justify-content-center align-items-center">
+          <h5><i>No server API URL in the format http[s]://[host]:[port] defined at REACT_APP_API_URL environment variable</i></h5>
+        </Container>
+      )
   }
 }
 export default App

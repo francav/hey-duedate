@@ -22,7 +22,6 @@ import com.victorfranca.duedate.calculator.partialbusinesshours.PartialBusinessH
 
 import lombok.Builder;
 
-//TODO multiple business hours windows by location
 /**
  * @author victor.franca
  *

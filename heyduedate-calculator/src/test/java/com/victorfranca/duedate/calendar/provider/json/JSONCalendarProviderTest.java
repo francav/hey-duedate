@@ -32,7 +32,6 @@ import com.victorfranca.duedate.calendar.Calendar;
 import com.victorfranca.duedate.calendar.provider.spi.exception.CalendarElementNotFound;
 import com.victorfranca.duedate.calendar.provider.spi.exception.InvalidCalendarException;
 
-//TODO given/when/then comments
 /**
  * @author victor.franca
  *

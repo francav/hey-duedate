@@ -27,21 +27,19 @@ import java.util.List;
 import com.victorfranca.duedate.calculator.daylightsaving.DayLightSavingVisitor;
 import com.victorfranca.duedate.calculator.log.CalculationLog;
 import com.victorfranca.duedate.calculator.log.CalculationLogBlock;
+import com.victorfranca.duedate.calculator.log.CalculationLogTimeTruncator;
 import com.victorfranca.duedate.calculator.nonbusinesshour.NonBusinessDayVisitor;
 import com.victorfranca.duedate.calculator.overlap.OverlapCalendarRule;
 import com.victorfranca.duedate.calendar.Calendar;
 import com.victorfranca.duedate.calendar.LocationRegularBusinessHours;
 
-//TODO trim seconds?
-//TODO different time zones
-//TODO Overlaping location times scenarios
-//TODO Thread safe? Concurrency?
-//TODO class and methods comments
 /**
  * @author victor.franca
  * 
  */
 public class DueDateCalculator {
+	// TODO this class can be improved avoiding global variables and better
+	// separating responsibilities
 
 	private List<CalculatorBlock> currentDateCalendarBlocks;
 
@@ -59,6 +57,17 @@ public class DueDateCalculator {
 		this.overlapCalendarRule = OverlapCalendarRule.builder().build();
 	}
 
+	/**
+	 * Returns {@link CalculationLog} holding the Due Date and the calculation
+	 * history log with a list of {@link CalculationLogBlock}. The history log
+	 * structure represents each of the calendars blocks with work time available to
+	 * be consumed by the SLA.
+	 * 
+	 * @param calendar
+	 * @param startDateTime
+	 * @param slaInMinutes
+	 * @return
+	 */
 	public CalculationLog calculateDueDateWithLog(Calendar calendar, LocalDateTime startDateTime, long slaInMinutes) {
 		CalculationLog calculationLog = new CalculationLog();
 
@@ -67,15 +76,23 @@ public class DueDateCalculator {
 		if (calculationLog != null && !calculationLog.isEmpty()) {
 			calculationLog.setStartDateTime(startDateTime);
 			calculationLog.setDueDateTime(dueDateTime);
-			calculationLog.truncateTimeUsedBySLA();
+			CalculationLogTimeTruncator.builder().build().visit(calculationLog);
 		}
 
 		return calculationLog;
 
 	}
 
-	// TODO exception when sla rolls over calendarDay onDuration
-	// Exception when SLA == ZERO
+	/**
+	 * Returns {@link CalculationLog} holding only the Due Date but not the
+	 * calculation history log. Should be used for best performance and/or the
+	 * calculation history log is not needed
+	 * 
+	 * @param calendar
+	 * @param startDateTime
+	 * @param slaInMinutes
+	 * @return
+	 */
 	public CalculationLog calculateDueDate(Calendar calendar, LocalDateTime startDateTime, long slaInMinutes) {
 		return new CalculationLog(calculateDueDate(calendar, startDateTime, slaInMinutes, null));
 	}
@@ -84,6 +101,10 @@ public class DueDateCalculator {
 			CalculationLog calculationLog) {
 
 		initCalendarBlocks(calendar, startDateTime, calculationLog);
+		if (slaInMinutes == 0) {
+			return startDateTime;
+		}
+
 		this.slaCounterInMinutes = slaInMinutes;
 		this.currentDateStartDateTime = startDateTime;
 
@@ -95,15 +116,15 @@ public class DueDateCalculator {
 		return dueDateTime;
 	}
 
-	// TODO refactor: avoid side effect behavior(get block and updating global
-	// variable)
+	/*
+	 * Advance to the due date block
+	 */
 	private CalculatorBlock getDueDateCalendarBlockAndUpdateSLACounter() {
 		Iterator<CalculatorBlock> calendarBlockIterator = this.currentDateCalendarBlocks.iterator();
 		CalculatorBlock calendarBlock = null;
 		while (slaCounterInMinutes > 0) {
 			calendarBlock = calendarBlockIterator.next();
 
-			// TODO implement calendarBlock.next() / calendarBlock.nextON()
 			if (calendarBlock.isOn()) {
 				if ((!currentDateStartDateTime.isAfter(calendarBlock.getEnd()))) {
 					slaCounterInMinutes -= calendarBlock.getDurationInMinutes();
@@ -118,11 +139,13 @@ public class DueDateCalculator {
 		return calendarBlock;
 	}
 
+	/*
+	 * Advance to the due date day
+	 */
 	private void advanceToDueDateDay(Calendar calendar, long slaInMinutes, CalculationLog calculationLog) {
-		// TODO refactor: move to a data structure (iterator?)
 		long rollingSlaMinutes = getRollingSlaMinutes(currentDateStartDateTime, slaInMinutes);
 		while (rollingSlaMinutes > 0) {
-			incCalendarBlocksDay(calendar, calculationLog);
+			nextCalendarBlocksDay(calendar, calculationLog);
 			if (rollingSlaMinutes >= 0) {
 				slaCounterInMinutes = rollingSlaMinutes;
 				currentDateStartDateTime = this.currentDateCalendarBlocks.get(0).getStart();
@@ -131,6 +154,9 @@ public class DueDateCalculator {
 		}
 	}
 
+	/*
+	 * Initialize calendar blocks at first day
+	 */
 	private void initCalendarBlocks(Calendar calendar, LocalDateTime startDateTime, CalculationLog calculationLog) {
 
 		this.currentDateCalendarBlocks = new ArrayList<>();
@@ -150,7 +176,13 @@ public class DueDateCalculator {
 			CalculatorBlock calendarBlock = new CalculatorBlock(
 					locationRegularBusinessHours.getLocation(startDateTime.toLocalDate()), start, end);
 
-			addToCurrentCalendarBlocks(calendar, calendarBlock, calculationLog);
+			this.currentDateCalendarBlocks.add(calendarBlock);
+
+			calendarBlock.accept(DayLightSavingVisitor.builder()
+					.dayLightSavingInfoByLocation(calendar.getDayLightSavingInfoByLocation()).build());
+
+			calendarBlock.accept(NonBusinessDayVisitor.builder()
+					.nonBusinessDaysByLocation(calendar.getNonBusinessDaysByLocation()).build());
 		}
 
 		unmergedCalendarBlocks = new ArrayList<>(currentDateCalendarBlocks);
@@ -159,15 +191,6 @@ public class DueDateCalculator {
 		buildCalculationLog(calculationLog);
 
 		updateOnDurationInMinutes();
-	}
-
-	private void addToCurrentCalendarBlocks(Calendar calendar, CalculatorBlock calendarBlock,
-			CalculationLog calculationLog) {
-		this.currentDateCalendarBlocks.add(calendarBlock);
-
-		calendarBlock.accept(DayLightSavingVisitor.builder(calendar.getDayLightSavingInfoByLocation()).build());
-
-		calendarBlock.accept(NonBusinessDayVisitor.builder(calendar.getNonBusinessDaysByLocation()).build());
 	}
 
 	private long getRollingSlaMinutes(LocalDateTime startDateTime, long slaInMinutes) {
@@ -195,15 +218,15 @@ public class DueDateCalculator {
 		return adaptedOnDurationInMinutes;
 	}
 
-	private void incCalendarBlocksDay(Calendar calendar, CalculationLog calculationLog) {
+	private void nextCalendarBlocksDay(Calendar calendar, CalculationLog calculationLog) {
 
 		unmergedCalendarBlocks.forEach(o -> o.nextDay());
 
-		unmergedCalendarBlocks.forEach(
-				o -> o.accept(DayLightSavingVisitor.builder(calendar.getDayLightSavingInfoByLocation()).build()));
+		unmergedCalendarBlocks.forEach(o -> o.accept(DayLightSavingVisitor.builder()
+				.dayLightSavingInfoByLocation(calendar.getDayLightSavingInfoByLocation()).build()));
 
-		unmergedCalendarBlocks
-				.forEach(o -> o.accept(NonBusinessDayVisitor.builder(calendar.getNonBusinessDaysByLocation()).build()));
+		unmergedCalendarBlocks.forEach(o -> o.accept(NonBusinessDayVisitor.builder()
+				.nonBusinessDaysByLocation(calendar.getNonBusinessDaysByLocation()).build()));
 
 		currentDateCalendarBlocks.clear();
 		currentDateCalendarBlocks.addAll(unmergedCalendarBlocks);

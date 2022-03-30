@@ -34,6 +34,8 @@ import com.victorfranca.duedate.calendar.Calendar;
 
 @RestController
 class HeyDueDateCalculatorController {
+	
+	// TODO adapt to noums and verbs REST structure
 
 	@Value("${calendar-datasource.type}")
 	private String dataSourceType;
