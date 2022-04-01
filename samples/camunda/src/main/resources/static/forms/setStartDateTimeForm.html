@@ -1,0 +1,52 @@
+<h3>Hey Due Date & Camunda Sample</h3>
+<form role="form" name="taskForm">
+
+	<div class="row">
+
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label for="startDateTime">Start Date/Time</label>
+				<div class="controls">
+					<input type="text"
+						required
+						cam-variable-name="startDateTime"
+						cam-variable-type="Date"
+						class="form-control"
+			       		uib-datepicker-popup="yyyy-MM-dd'T'HH:mm:ss"
+						is-open="dateFieldOpened" />
+					<span class="input-group-btn">
+						<button type="button"
+							class="btn btn-default"
+							ng-click="open($event)">
+							
+							<i class="glyphicon glyphicon-calendar"></i>
+						</button>
+					</span>						
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="slaInMinutes">SLA (minutes)</label>
+				<div class="controls">
+					<input type="text"
+						required
+						cam-variable-name="slaInMinutes"
+						cam-variable-type="Long"
+						type="number
+						class="form-control" />
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+	
+	<script cam-script type="text/form-script">
+	  $scope.open = function($event) {
+	    $event.preventDefault();
+	    $event.stopPropagation();
+	
+	    $scope.dateFieldOpened = true;
+	  };
+	</script>
+</form>

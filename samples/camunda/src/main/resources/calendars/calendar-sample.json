@@ -2,7 +2,7 @@
 	"regularBusinessHours": [
 		{
 			"location": "Hong Kong",
-			"startHour": "0",
+			"startHour": "1",
 			"startMinute": "0",
 			"endHour": "5",
 			"endMinute": "0"
@@ -11,15 +11,15 @@
 			"location": "Ireland",
 			"startHour": "5",
 			"startMinute": "0",
-			"endHour": "21",
-			"endMinute": "0"
+			"endHour": "17",
+			"endMinute": "30"
 		},
 		{
 			"location": "United States",
-			"startHour": "13",
+			"startHour": "17",
 			"startMinute": "30",
 			"endHour": "23",
-			"endMinute": "30"
+			"endMinute": "0"
 		}
 	],
 	"nonBusinessHoursDays": [

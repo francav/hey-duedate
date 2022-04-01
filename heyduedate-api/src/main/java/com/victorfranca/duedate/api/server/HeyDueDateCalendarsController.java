@@ -17,32 +17,27 @@ package com.victorfranca.duedate.api.server;
 
 import java.util.List;
 
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import javax.annotation.Resource;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.victorfranca.duedate.api.datasource.CalendarDataSource;
-import com.victorfranca.duedate.api.datasource.CalendarDataSourceException;
+import com.victorfranca.duedate.calendar.datasource.CalendarDataSource;
+import com.victorfranca.duedate.calendar.datasource.CalendarDataSourceException;
 
 @RestController
 class HeyDueDateCalendarsController {
-	
+
 	// TODO adapt to noums and verbs REST structure
 
-	@Value("${calendar-datasource.type}")
-	private String dataSourceType;
-
-	@Autowired
-	private BeanFactory beanFactory;
+	@Resource(name = "calendarDataSource")
+	private CalendarDataSource calendarDataSource;
 
 	@GetMapping(value = "/calendar")
 	public List<String> getDueDateWithLog() {
 
 		try {
-			CalendarDataSource calendarDataSource = beanFactory.getBean(dataSourceType, CalendarDataSource.class);
-			return calendarDataSource.getCalendars();
+			return calendarDataSource.getCalendarsNames();
 		} catch (CalendarDataSourceException e) {
 			throw new RuntimeException("Internal Error", e);
 		}

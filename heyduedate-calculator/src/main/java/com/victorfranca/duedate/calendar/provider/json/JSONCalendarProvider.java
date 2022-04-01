@@ -67,11 +67,8 @@ public class JSONCalendarProvider implements CalendarProvider {
 	private static final String DST_END = "end";
 	private static final String DST_OFFSET = "offsetInMinutes";
 
-	@SuppressWarnings("unused")
-	private JSONCalendarProvider() {
-	}
-
-	public JSONCalendarProvider(JSONObject calendarDataSource) throws InvalidCalendarException {
+	@Override
+	public Calendar createCalendar(JSONObject calendarDataSource) throws CalendarElementNotFound, InvalidCalendarException {
 		try {
 			validateCalendarDataSource(calendarDataSource);
 		} catch (InvalidCalendarException e) {
@@ -81,10 +78,7 @@ public class JSONCalendarProvider implements CalendarProvider {
 		this.regularBusinessHoursDays = (List) calendarDataSource.get(REGULAR_BUSINESS_HOURS);
 		this.nonBusinessHoursDays = (List) calendarDataSource.get(NON_BUSINESS_HOURS_DAYS);
 		this.dstInfoList = (List) calendarDataSource.get(DST_INFO_LIST);
-	}
-
-	@Override
-	public Calendar createCalendar() throws CalendarElementNotFound, InvalidCalendarException {
+		
 		Calendar calendar = new Calendar();
 
 		addLocationRegularBusinessHours(calendar);

@@ -101,8 +101,8 @@ public class JSONCalendarProviderTest {
 		calendarObject.put(CALENDAR_ELEMENT, locationsArray);
 
 		try {
-			JSONCalendarProvider jsonCalendarProvider = new JSONCalendarProvider(calendarObject);
-			Calendar calendar = jsonCalendarProvider.createCalendar();
+			JSONCalendarProvider jsonCalendarProvider = new JSONCalendarProvider();
+			Calendar calendar = jsonCalendarProvider.createCalendar(calendarObject);
 
 			assertNotNull("Partial Business Hours info not found",
 					calendar.getRegularBusinessHours().get(0).getPartialBusinessHoursMap());
@@ -178,8 +178,8 @@ public class JSONCalendarProviderTest {
 		calendarObject.put(DST_INFO_LIST_ELEMENT, dstArray);
 
 		try {
-			JSONCalendarProvider jsonCalendarProvider = new JSONCalendarProvider(calendarObject);
-			Calendar calendar = jsonCalendarProvider.createCalendar();
+			JSONCalendarProvider jsonCalendarProvider = new JSONCalendarProvider();
+			Calendar calendar = jsonCalendarProvider.createCalendar(calendarObject);
 
 			assertNotNull("DST info not found", calendar.getDayLightSavingInfoByLocation().get(location));
 			assertEquals(LocalDate.parse(nonBusinessDate1),
@@ -226,8 +226,8 @@ public class JSONCalendarProviderTest {
 		calendarObject.put(NON_BUSINESS_HOURS_DAYS_ELEMENT, nonBusinessDaysArray);
 
 		try {
-			JSONCalendarProvider jsonCalendarProvider = new JSONCalendarProvider(calendarObject);
-			Calendar calendar = jsonCalendarProvider.createCalendar();
+			JSONCalendarProvider jsonCalendarProvider = new JSONCalendarProvider();
+			Calendar calendar = jsonCalendarProvider.createCalendar(calendarObject);
 
 			assertNotNull("Non-Business Days not found", calendar.getNonBusinessDaysByLocation().get(location));
 			assertEquals(LocalDate.parse(nonBusinessDate1),
@@ -265,8 +265,8 @@ public class JSONCalendarProviderTest {
 		calendarObject.put(CALENDAR_ELEMENT, locationsArray);
 
 		try {
-			JSONCalendarProvider jsonCalendarProvider = new JSONCalendarProvider(calendarObject);
-			Calendar calendar = jsonCalendarProvider.createCalendar();
+			JSONCalendarProvider jsonCalendarProvider = new JSONCalendarProvider();
+			Calendar calendar = jsonCalendarProvider.createCalendar(calendarObject);
 
 			assertEquals(locationStartHour, calendar.getRegularBusinessHours().get(0).getStartHour(date));
 			assertEquals(locationStartMinute, calendar.getRegularBusinessHours().get(0).getStartMinute(date));
@@ -286,7 +286,7 @@ public class JSONCalendarProviderTest {
 		JSONObject jsonObject = new JSONObject();
 
 		assertThrows(InvalidCalendarException.class, () -> {
-			new JSONCalendarProvider(jsonObject);
+			new JSONCalendarProvider().createCalendar(jsonObject);
 		});
 
 	}
@@ -297,7 +297,7 @@ public class JSONCalendarProviderTest {
 		JSONObject jsonObject = new JSONObject();
 
 		assertThrows(InvalidCalendarException.class, () -> {
-			new JSONCalendarProvider(jsonObject);
+			new JSONCalendarProvider().createCalendar(jsonObject);
 		});
 
 	}
@@ -309,7 +309,7 @@ public class JSONCalendarProviderTest {
 		jsonObject.put(CALENDAR_ELEMENT, new JSONObject());
 
 		assertThrows(InvalidCalendarException.class, () -> {
-			new JSONCalendarProvider(jsonObject);
+			new JSONCalendarProvider().createCalendar(jsonObject);
 		});
 
 	}
@@ -327,8 +327,8 @@ public class JSONCalendarProviderTest {
 		assertThrows(CalendarElementNotFound.class, () -> {
 
 			try {
-				JSONCalendarProvider jsonCalendarProvider = new JSONCalendarProvider(calendarObject);
-				jsonCalendarProvider.createCalendar();
+				JSONCalendarProvider jsonCalendarProvider = new JSONCalendarProvider();
+				jsonCalendarProvider.createCalendar(calendarObject);
 			} catch (InvalidCalendarException e) {
 				fail();
 			}
