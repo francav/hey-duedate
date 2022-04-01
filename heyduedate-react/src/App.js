@@ -39,7 +39,7 @@ class App extends Component {
       axios.get(process.env.REACT_APP_API_URL + "/calendar").then((response) => {
         this.setState({
           calendars: response.data,
-          calendar: response.data.length > 1 ? response.data[0] : null
+          calendar: response.data.length > 0 ? response.data[0] : null
         })
       })
     }

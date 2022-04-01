@@ -13,20 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.victorfranca.duedate.calendar.provider.spi;
+package com.victorfranca.duedate.calendar.datasource;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.victorfranca.duedate.calendar.Calendar;
+import com.victorfranca.duedate.calendar.provider.json.JSONCalendarProvider;
 import com.victorfranca.duedate.calendar.provider.spi.exception.CalendarElementNotFound;
 import com.victorfranca.duedate.calendar.provider.spi.exception.InvalidCalendarException;
 
-/**
- * @author victor.franca
- *
- */
-public interface CalendarProvider {
+public abstract class InputStreamCalendarDataSource implements CalendarDataSource {
 
-	Calendar createCalendar(JSONObject calendarDataSource) throws CalendarElementNotFound, InvalidCalendarException;
+	@Override
+	public Calendar getCalendarData(String calendarFileName) throws CalendarDataSourceException {
+		try {
+			InputStream resourceInputStream = getInputStream(calendarFileName);
+
+			return new JSONCalendarProvider()
+					.createCalendar((JSONObject) new JSONParser().parse(new InputStreamReader(resourceInputStream)));
+		} catch (IOException | ParseException | CalendarElementNotFound | InvalidCalendarException e) {
+			throw new CalendarDataSourceException(e.getMessage(), e);
+		}
+
+	}
+
+	protected abstract InputStream getInputStream(String calendarFileName) throws IOException;
 
 }

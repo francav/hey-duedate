@@ -18,34 +18,29 @@ package com.victorfranca.duedate.api.server;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import javax.annotation.Resource;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.victorfranca.duedate.api.datasource.CalendarDataSource;
-import com.victorfranca.duedate.api.datasource.CalendarDataSourceException;
 import com.victorfranca.duedate.calculator.DueDateCalculator;
 import com.victorfranca.duedate.calculator.log.CalculationLog;
 import com.victorfranca.duedate.calendar.Calendar;
+import com.victorfranca.duedate.calendar.datasource.CalendarDataSource;
+import com.victorfranca.duedate.calendar.datasource.CalendarDataSourceException;
 
 @RestController
 class HeyDueDateCalculatorController {
-	
+
 	// TODO adapt to noums and verbs REST structure
 
-	@Value("${calendar-datasource.type}")
-	private String dataSourceType;
-
-	@Autowired
-	private BeanFactory beanFactory;
+	@Resource(name = "calendarDataSource")
+	private CalendarDataSource calendarDataSource;
 
 	@GetMapping(value = "/duedate")
-	public CalculationLog getDueDateWithLog(
-			@RequestParam("calendar") String calendarName,
+	public CalculationLog getDueDateWithLog(@RequestParam("calendar") String calendarName,
 			@RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
 			@RequestParam("sla") Integer slaInMinutes, @RequestParam("log") Boolean logEnabled) {
 
@@ -53,7 +48,6 @@ class HeyDueDateCalculatorController {
 
 		Calendar calendar = null;
 		try {
-			CalendarDataSource calendarDataSource = beanFactory.getBean(dataSourceType, CalendarDataSource.class);
 			calendar = calendarDataSource.getCalendarData(calendarName);
 		} catch (CalendarDataSourceException e) {
 			throw new RuntimeException("Internal Error", e);
@@ -61,7 +55,7 @@ class HeyDueDateCalculatorController {
 
 		if (logEnabled) {
 			return new DueDateCalculator().calculateDueDateWithLog(calendar, startDateTime, slaInMinutes);
-		}else {
+		} else {
 			return new DueDateCalculator().calculateDueDate(calendar, startDateTime, slaInMinutes);
 		}
 

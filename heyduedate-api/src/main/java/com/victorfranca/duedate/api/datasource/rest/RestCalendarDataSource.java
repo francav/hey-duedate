@@ -18,6 +18,8 @@ package com.victorfranca.duedate.api.datasource.rest;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -31,9 +33,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import com.victorfranca.duedate.api.datasource.CalendarDataSource;
-import com.victorfranca.duedate.api.datasource.CalendarDataSourceException;
 import com.victorfranca.duedate.calendar.Calendar;
+import com.victorfranca.duedate.calendar.datasource.CalendarDataSource;
+import com.victorfranca.duedate.calendar.datasource.CalendarDataSourceException;
 import com.victorfranca.duedate.calendar.provider.json.JSONCalendarProvider;
 import com.victorfranca.duedate.calendar.provider.spi.exception.CalendarElementNotFound;
 import com.victorfranca.duedate.calendar.provider.spi.exception.InvalidCalendarException;
@@ -47,6 +49,9 @@ public class RestCalendarDataSource implements CalendarDataSource {
 
 	private MultiValueMap<String, String> headers;
 
+	@Resource(name = "calendarProvider")
+	private JSONCalendarProvider jsonCalendarProvider;
+
 	public RestCalendarDataSource(@Value("${calendar-datasource-rest.url}") String url) {
 		this.url = url;
 	}
@@ -56,10 +61,16 @@ public class RestCalendarDataSource implements CalendarDataSource {
 		initHttpHeaderMap();
 
 		try {
-			return new JSONCalendarProvider(executeGetRequest(url).getBody()).createCalendar();
+			return jsonCalendarProvider.createCalendar(executeGetRequest(url).getBody());
 		} catch (CalendarElementNotFound | InvalidCalendarException e) {
 			throw new CalendarDataSourceException(e.getMessage(), e);
 		}
+	}
+
+	@Override
+	public List<String> getCalendarsNames() throws CalendarDataSourceException {
+		// TODO implement REST calendars list verb
+		return null;
 	}
 
 	private ResponseEntity<JSONObject> executeGetRequest(String resourceUrl) {
@@ -82,12 +93,6 @@ public class RestCalendarDataSource implements CalendarDataSource {
 		this.headers.add("Content-Type", "application/json");
 		this.headers.add("Accept", "application/json");
 
-	}
-
-	@Override
-	public List<String> getCalendars() throws CalendarDataSourceException {
-		// TODO implement REST calendars list verb
-		return null;
 	}
 
 }

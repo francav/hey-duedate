@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.victorfranca.duedate.api.datasource;
+package com.victorfranca.duedate.calendar.datasource;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import com.victorfranca.duedate.calendar.Calendar;
 
 public interface CalendarDataSource {
 
-	public List<String> getCalendars() throws CalendarDataSourceException;
+	public List<String> getCalendarsNames() throws CalendarDataSourceException;
 
 	public Calendar getCalendarData(String calendar) throws CalendarDataSourceException;
 

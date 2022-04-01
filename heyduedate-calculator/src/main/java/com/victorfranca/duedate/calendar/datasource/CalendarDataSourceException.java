@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.victorfranca.duedate.api.datasource;
+package com.victorfranca.duedate.calendar.datasource;
 
 public class CalendarDataSourceException extends Exception {
 
