@@ -1,5 +1,7 @@
 # Hey Due Date!
 
+## Bringing light into Due Date Calculations!
+
 Calculating tasks and processes due dates is a common problem in many organizations, however solutions to this problem tend to be decentralized and duplicated among very different systems like Process Automation tools, Service Now, Jira, ticket systems, and alike.
 
 Live demo: http://hey-duedate-react.s3-website-us-east-1.amazonaws.com/ 
