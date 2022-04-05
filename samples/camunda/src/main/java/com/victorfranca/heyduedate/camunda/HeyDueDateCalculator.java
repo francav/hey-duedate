@@ -39,9 +39,9 @@ public class HeyDueDateCalculator implements JavaDelegate {
 		LocalDateTime dueDateUTC = new DueDateCalculator().calculateDueDate(calendar, startDateTimeUTC, slaInMinutes)
 				.getDueDateTime();
 
-		execution.setVariable("startDateTimeUTC", startDateTimeUTC.toString());
-		
 		execution.setVariable("dueDate", Date.from(dueDateUTC.atZone(ZoneId.of("UTC")).toInstant()));
+
+		execution.setVariable("utcStartDateTimeUTC", startDateTimeUTC.toString());
 		execution.setVariable("dueDateUTC", dueDateUTC.toString());
 	}
 
