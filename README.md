@@ -36,6 +36,12 @@ Live demo: http://hey-duedate-react.s3-website-us-east-1.amazonaws.com/
 ## How do I set it up?
 TBD
 
+## Camunda Integration
+TBD
+
+## Outlook Integration
+TBD
+
 ## Custom Calendar's data providers
 TBD
 
@@ -52,4 +58,3 @@ TBD
 
 ### Viewer
 TBD
-
