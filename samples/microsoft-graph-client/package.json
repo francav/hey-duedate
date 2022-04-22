@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@azure/identity": "^2.0.4",
-    "@microsoft/microsoft-graph-client": "^3.0.2",
-    "isomorphic-fetch": "^3.0.0"
-  }
-}

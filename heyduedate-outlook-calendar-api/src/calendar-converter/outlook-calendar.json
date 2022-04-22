@@ -1,0 +1,155 @@
+[
+    {
+        "userId": "a2220b92-b283-493e-87b7-46dbdb6b7e96",
+        "calendarId": "AAMkADMzODgwZTYxLTRkMzctNDAwMy1iYjY5LWRhNzA2NmEyYWE0NwBGAAAAAADv8qQ3ElaXTKIhJWl0HPY2BwCNPYbQvILgQrogXQkFiafWAAAAAAEGAACNPYbQvILgQrogXQkFiafWAAAAACqEAAA=",
+        "events": []
+    },
+    {
+        "userId": "a2220b92-b283-493e-87b7-46dbdb6b7e96",
+        "calendarId": "AAMkADMzODgwZTYxLTRkMzctNDAwMy1iYjY5LWRhNzA2NmEyYWE0NwBGAAAAAADv8qQ3ElaXTKIhJWl0HPY2BwCNPYbQvILgQrogXQkFiafWAAAAAAEGAACNPYbQvILgQrogXQkFiafWAAAAACqKAAA=",
+        "events": [
+            {
+                "id": "AAMkADMzODgwZTYxLTRkMzctNDAwMy1iYjY5LWRhNzA2NmEyYWE0NwBGAAAAAADv8qQ3ElaXTKIhJWl0HPY2BwCNPYbQvILgQrogXQkFiafWAAAAAAFaAACNPYbQvILgQrogXQkFiafWAAAAAG_rAAA=",
+                "subject": "weekend",
+                "type": "seriesMaster",
+                "start": {
+                    "dateTime": "2022-01-01T00:00:00.0000000",
+                    "timeZone": "UTC"
+                },
+                "end": {
+                    "dateTime": "2022-01-01T23:59:00.0000000",
+                    "timeZone": "UTC"
+                }
+            },
+            {
+                "id": "AAMkADMzODgwZTYxLTRkMzctNDAwMy1iYjY5LWRhNzA2NmEyYWE0NwBGAAAAAADv8qQ3ElaXTKIhJWl0HPY2BwCNPYbQvILgQrogXQkFiafWAAAAAAFaAACNPYbQvILgQrogXQkFiafWAAAAAG_oAAA=",
+                "subject": "off",
+                "type": "seriesMaster",
+                "start": {
+                    "dateTime": "2022-01-03T00:00:00.0000000",
+                    "timeZone": "UTC"
+                },
+                "end": {
+                    "dateTime": "2022-01-03T04:59:00.0000000",
+                    "timeZone": "UTC"
+                }
+            },
+            {
+                "id": "AAMkADMzODgwZTYxLTRkMzctNDAwMy1iYjY5LWRhNzA2NmEyYWE0NwBGAAAAAADv8qQ3ElaXTKIhJWl0HPY2BwCNPYbQvILgQrogXQkFiafWAAAAAAFaAACNPYbQvILgQrogXQkFiafWAAAAAG_pAAA=",
+                "subject": "off",
+                "type": "seriesMaster",
+                "start": {
+                    "dateTime": "2022-01-03T17:31:00.0000000",
+                    "timeZone": "UTC"
+                },
+                "end": {
+                    "dateTime": "2022-01-03T23:59:00.0000000",
+                    "timeZone": "UTC"
+                }
+            }
+        ]
+    },
+    {
+        "userId": "a2220b92-b283-493e-87b7-46dbdb6b7e96",
+        "calendarId": "AAMkADMzODgwZTYxLTRkMzctNDAwMy1iYjY5LWRhNzA2NmEyYWE0NwBGAAAAAADv8qQ3ElaXTKIhJWl0HPY2BwCNPYbQvILgQrogXQkFiafWAAAAAAEGAACNPYbQvILgQrogXQkFiafWAAAAACqRAAA=",
+        "events": [
+            {
+                "id": "AAMkADMzODgwZTYxLTRkMzctNDAwMy1iYjY5LWRhNzA2NmEyYWE0NwBGAAAAAADv8qQ3ElaXTKIhJWl0HPY2BwCNPYbQvILgQrogXQkFiafWAAAAAAFhAACNPYbQvILgQrogXQkFiafWAAAAAINFAAA=",
+                "subject": "off",
+                "type": "singleInstance",
+                "start": {
+                    "dateTime": "2002-01-01T00:00:00.0000000",
+                    "timeZone": "UTC"
+                },
+                "end": {
+                    "dateTime": "2002-01-01T18:29:00.0000000",
+                    "timeZone": "UTC"
+                }
+            },
+            {
+                "id": "AAMkADMzODgwZTYxLTRkMzctNDAwMy1iYjY5LWRhNzA2NmEyYWE0NwBGAAAAAADv8qQ3ElaXTKIhJWl0HPY2BwCNPYbQvILgQrogXQkFiafWAAAAAAFhAACNPYbQvILgQrogXQkFiafWAAAAAINHAAA=",
+                "subject": "weekend",
+                "type": "seriesMaster",
+                "start": {
+                    "dateTime": "2022-01-01T00:00:00.0000000",
+                    "timeZone": "UTC"
+                },
+                "end": {
+                    "dateTime": "2022-01-01T23:59:00.0000000",
+                    "timeZone": "UTC"
+                }
+            },
+            {
+                "id": "AAMkADMzODgwZTYxLTRkMzctNDAwMy1iYjY5LWRhNzA2NmEyYWE0NwBGAAAAAADv8qQ3ElaXTKIhJWl0HPY2BwCNPYbQvILgQrogXQkFiafWAAAAAAFhAACNPYbQvILgQrogXQkFiafWAAAAAINIAAA=",
+                "subject": "weekend",
+                "type": "seriesMaster",
+                "start": {
+                    "dateTime": "2022-01-02T00:00:00.0000000",
+                    "timeZone": "UTC"
+                },
+                "end": {
+                    "dateTime": "2022-01-02T23:59:00.0000000",
+                    "timeZone": "UTC"
+                }
+            },
+            {
+                "id": "AAMkADMzODgwZTYxLTRkMzctNDAwMy1iYjY5LWRhNzA2NmEyYWE0NwBGAAAAAADv8qQ3ElaXTKIhJWl0HPY2BwCNPYbQvILgQrogXQkFiafWAAAAAAFhAACNPYbQvILgQrogXQkFiafWAAAAAINGAAA=",
+                "subject": "off",
+                "type": "seriesMaster",
+                "start": {
+                    "dateTime": "2022-01-03T00:00:00.0000000",
+                    "timeZone": "UTC"
+                },
+                "end": {
+                    "dateTime": "2022-01-03T18:29:00.0000000",
+                    "timeZone": "UTC"
+                }
+            }
+        ]
+    },
+    {
+        "userId": "a2220b92-b283-493e-87b7-46dbdb6b7e96",
+        "calendarId": "AAMkADMzODgwZTYxLTRkMzctNDAwMy1iYjY5LWRhNzA2NmEyYWE0NwBGAAAAAADv8qQ3ElaXTKIhJWl0HPY2BwCNPYbQvILgQrogXQkFiafWAAAAAAEGAACNPYbQvILgQrogXQkFiafWAAAAACqSAAA=",
+        "events": [
+            {
+                "id": "AAMkADMzODgwZTYxLTRkMzctNDAwMy1iYjY5LWRhNzA2NmEyYWE0NwBGAAAAAADv8qQ3ElaXTKIhJWl0HPY2BwCNPYbQvILgQrogXQkFiafWAAAAAAFiAACNPYbQvILgQrogXQkFiafWAAAAAIc2AAA=",
+                "subject": "weekend",
+                "type": "seriesMaster",
+                "start": {
+                    "dateTime": "2022-01-01T00:00:00.0000000",
+                    "timeZone": "UTC"
+                },
+                "end": {
+                    "dateTime": "2022-01-01T23:59:00.0000000",
+                    "timeZone": "UTC"
+                }
+            },
+            {
+                "id": "AAMkADMzODgwZTYxLTRkMzctNDAwMy1iYjY5LWRhNzA2NmEyYWE0NwBGAAAAAADv8qQ3ElaXTKIhJWl0HPY2BwCNPYbQvILgQrogXQkFiafWAAAAAAFiAACNPYbQvILgQrogXQkFiafWAAAAAIc1AAA=",
+                "subject": "off",
+                "type": "seriesMaster",
+                "start": {
+                    "dateTime": "2022-01-03T00:00:00.0000000",
+                    "timeZone": "UTC"
+                },
+                "end": {
+                    "dateTime": "2022-01-03T00:59:00.0000000",
+                    "timeZone": "UTC"
+                }
+            },
+            {
+                "id": "AAMkADMzODgwZTYxLTRkMzctNDAwMy1iYjY5LWRhNzA2NmEyYWE0NwBGAAAAAADv8qQ3ElaXTKIhJWl0HPY2BwCNPYbQvILgQrogXQkFiafWAAAAAAFiAACNPYbQvILgQrogXQkFiafWAAAAAIczAAA=",
+                "subject": "off",
+                "type": "seriesMaster",
+                "start": {
+                    "dateTime": "2022-01-03T05:01:00.0000000",
+                    "timeZone": "UTC"
+                },
+                "end": {
+                    "dateTime": "2022-01-03T23:59:00.0000000",
+                    "timeZone": "UTC"
+                }
+            }
+        ]
+    }
+]

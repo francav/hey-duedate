@@ -16,6 +16,4 @@ const client = Client.initWithMiddleware({
 	authProvider,
 });
 
-module.exports = {
-	client: client,
-};
+export default client;
