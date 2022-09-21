@@ -17,7 +17,6 @@
 	<modules>
 		<module>heyduedate-calculator</module>
 		<module>heyduedate-api</module>
-		<module>c8-connector</module>
 		<module>c8-connector-job-worker</module>
 	</modules>
 </project>
