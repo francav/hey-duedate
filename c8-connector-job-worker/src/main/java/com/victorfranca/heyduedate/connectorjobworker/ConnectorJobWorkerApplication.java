@@ -1,37 +1,61 @@
 package com.victorfranca.heyduedate.connectorjobworker;
 
-import java.util.concurrent.ExecutionException;
+import static com.victorfranca.heyduedate.connectorjobworker.StringToLocalDateParser.extractLocalDateTime;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import io.camunda.connector.HeyDueDateFunction;
-import io.camunda.connector.runtime.jobworker.ConnectorJobHandler;
-import io.camunda.zeebe.client.ZeebeClient;
-import io.camunda.zeebe.client.impl.oauth.OAuthCredentialsProvider;
-import io.camunda.zeebe.client.impl.oauth.OAuthCredentialsProviderBuilder;
+import com.victorfranca.duedate.calculator.DueDateCalculator;
+import com.victorfranca.duedate.calendar.Calendar;
+import com.victorfranca.duedate.calendar.datasource.CalendarDataSource;
+import com.victorfranca.duedate.calendar.datasource.CalendarDataSourceException;
+
+import io.camunda.zeebe.client.api.response.ActivatedJob;
+import io.camunda.zeebe.client.api.worker.JobClient;
+import io.camunda.zeebe.spring.client.EnableZeebeClient;
+import io.camunda.zeebe.spring.client.annotation.ZeebeVariable;
+import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
 
 @SpringBootApplication
+@EnableZeebeClient
 public class ConnectorJobWorkerApplication {
 
-	private static final String zeebeAPI = "04322dc6-3d72-4d72-8dfc-484189a06927.bru-2.zeebe.camunda.io";
-	private static final String clientId = "vGMj5t5PK1LObVszf5mswW6QtFr5-xk6";
-	private static final String clientSecret = "TXNWoTDYqRRYbs7QUleD_HSEgKJ.TGNr3.6PJIrtzzpM~7LaACOeEdeViLd8AfBD";
-	private static final String oAuthAPI = "https://login.cloud.camunda.io/oauth/token";
+	@Resource(name = "calendarDataSource")
+	private CalendarDataSource calendarDataSource;
 
-	public static void main(String[] args) throws InterruptedException, ExecutionException {
+	public static void main(String[] args) {
 		SpringApplication.run(ConnectorJobWorkerApplication.class, args);
+	}
 
-		OAuthCredentialsProvider credentialsProvider = new OAuthCredentialsProviderBuilder()
-				.authorizationServerUrl(oAuthAPI).audience(zeebeAPI).clientId(clientId).clientSecret(clientSecret)
-				.build();
+	@ZeebeWorker(type = "io.camunda:hey-due-date:1", autoComplete = true)
+	public Map<String, Object> calculateDueDate(final JobClient client, final ActivatedJob job,
+			@ZeebeVariable String calendar, @ZeebeVariable String startDate, @ZeebeVariable String sla) {
 
-		try (ZeebeClient client = ZeebeClient.newClientBuilder().gatewayAddress(zeebeAPI)
-				.credentialsProvider(credentialsProvider).build()) {
-			client.newWorker().jobType("io.camunda:my-connector:1")
-					.handler(new ConnectorJobHandler(new HeyDueDateFunction())).name("HeyDueDateWorker")
-					.fetchVariables("foo", "bar").open();
+		LocalDateTime localDateTime = extractLocalDateTime(startDate);
+
+		Calendar heyDueDateCalendar = null;
+		try {
+			heyDueDateCalendar = calendarDataSource.getCalendarData(calendar);
+		} catch (CalendarDataSourceException e) {
+			throw new RuntimeException("Internal Error", e);
 		}
+
+		HashMap<String, Object> processVariables = new HashMap<>();
+		LocalDateTime dueDate = calculateDueDate(sla, localDateTime, heyDueDateCalendar);
+		processVariables.put("dueDateTime", DateTimeFormatter.ISO_DATE_TIME.format(dueDate));
+		return processVariables;
+	}
+
+	private LocalDateTime calculateDueDate(String sla, LocalDateTime localDateTime, Calendar heyDueDateCalendar) {
+		return new DueDateCalculator().calculateDueDate(heyDueDateCalendar, localDateTime, Long.valueOf(sla) * 60)
+				.getDueDateTime();
 	}
 
 }
