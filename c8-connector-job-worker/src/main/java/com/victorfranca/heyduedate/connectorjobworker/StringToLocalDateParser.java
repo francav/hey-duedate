@@ -8,10 +8,9 @@ import java.time.temporal.ChronoUnit;
  *
  */
 public class StringToLocalDateParser {
-	
+
 	public static LocalDateTime extractLocalDateTime(String startDate) {
 		return LocalDateTime.parse(startDate.replaceAll("Z\\[Etc/UTC\\]", "")).truncatedTo(ChronoUnit.MINUTES);
 	}
-
 
 }

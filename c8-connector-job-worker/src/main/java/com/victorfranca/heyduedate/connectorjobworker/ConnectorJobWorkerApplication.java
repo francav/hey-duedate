@@ -1,9 +1,11 @@
 package com.victorfranca.heyduedate.connectorjobworker;
 
+import static com.victorfranca.heyduedate.connectorjobworker.LocalDateToStringParser.parseToString;
 import static com.victorfranca.heyduedate.connectorjobworker.StringToLocalDateParser.extractLocalDateTime;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,8 +51,16 @@ public class ConnectorJobWorkerApplication {
 
 		HashMap<String, Object> processVariables = new HashMap<>();
 		LocalDateTime dueDate = calculateDueDate(sla, localDateTime, heyDueDateCalendar);
-		processVariables.put("dueDateTime", DateTimeFormatter.ISO_DATE_TIME.format(dueDate));
+
+		processVariables.put("dueDateTime", parseToString(dueDate));
+		processVariables.put("dueDateDuration", calculateDuration(dueDate));
+
 		return processVariables;
+	}
+
+	private String calculateDuration(LocalDateTime dueDate) {
+		return String.valueOf(Duration.between(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS),
+				dueDate.truncatedTo(ChronoUnit.SECONDS)));
 	}
 
 	private LocalDateTime calculateDueDate(String sla, LocalDateTime localDateTime, Calendar heyDueDateCalendar) {
